@@ -12,7 +12,12 @@ using namespace cocos2d;
 
 class MainScene : public Layer
 {
-    Size screenSize;
+    Size _screenSize;
+    Vec2 _center;
+    Vec2 _delta;
+    Vec2 _tap;
+    
+    Sprite* _snail;
     
 public:
     MainScene();
@@ -23,6 +28,10 @@ public:
     static Scene* createScene();
     
     CREATE_FUNC(MainScene);
+    
+    bool onTouchBegan(Touch*, Event*);
+    void onTouchMoved(Touch*, Event*);
+    void onTouchEnded(Touch*, Event*);
 };
 
 #endif // __MAIN_SCENE_H__
