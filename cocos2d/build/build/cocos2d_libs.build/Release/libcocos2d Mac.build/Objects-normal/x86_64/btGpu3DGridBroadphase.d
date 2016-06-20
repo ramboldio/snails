@@ -1,0 +1,20 @@
+dependencies: \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/external/bullet/BulletMultiThreaded/btGpu3DGridBroadphase.cpp \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/BulletMultiThreaded/btGpuDefines.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/BulletMultiThreaded/btGpuUtilsSharedDefs.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/BulletMultiThreaded/btGpuUtilsSharedCode.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/LinearMath/btAlignedAllocator.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/LinearMath/btScalar.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/LinearMath/btQuickprof.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/BulletCollision//BroadphaseCollision/btOverlappingPairCache.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/BulletCollision//BroadphaseCollision/btBroadphaseInterface.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/BulletCollision//BroadphaseCollision/btBroadphaseProxy.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/LinearMath/btVector3.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/LinearMath/btMinMax.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/BulletCollision//BroadphaseCollision/btOverlappingPairCallback.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/LinearMath/btAlignedObjectArray.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/external/bullet/BulletMultiThreaded/btGpu3DGridBroadphaseSharedDefs.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/external/bullet/BulletMultiThreaded/btGpu3DGridBroadphaseSharedTypes.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/external/bullet/BulletMultiThreaded/btGpu3DGridBroadphase.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/build/../external/bullet/BulletCollision//BroadphaseCollision/btSimpleBroadphase.h \
+  /Users/alexsverdelov/Documents/kirikia/LMU/MMP/Snails/cocos2d/external/bullet/BulletMultiThreaded/btGpu3DGridBroadphaseSharedCode.h
