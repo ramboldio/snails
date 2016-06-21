@@ -22,7 +22,7 @@ bool StartScene::init() {
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
-    auto backgroundSprite = Sprite::create("res/bg.png");
+    auto backgroundSprite = Sprite::create("res/background_start.png");
     backgroundSprite->setScale(1.5);
     backgroundSprite->setPosition( Point( visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y ) );
     
