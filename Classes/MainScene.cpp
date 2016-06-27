@@ -81,19 +81,7 @@ bool MainScene::init() {
     this->addChild(ground, 1);
     
     
-<<<<<<< HEAD
-    // test-snail :)
-    _snail = Sprite::create("res/snail.png");
-    auto snailBody = PhysicsBody::createBox(Size(50.0f, 50.0f), PhysicsMaterial(0.5f, 0.4f, 1.0f));
-    snailBody->setMass(10.0f);
-    
-    _snail->setPosition(Vec2(400.0f, 500.0f));
-    _snail->setPhysicsBody(snailBody);
-    
-    this->addChild(_snail, 2);
-=======
     createSnail();
->>>>>>> origin/development
     
     // Camera
     float playfield_width = _screenSize.width * 2.0; // make the x-boundry 2 times the screen width
