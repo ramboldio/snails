@@ -17,7 +17,7 @@ class MainScene : public Layer
     Vec2 _delta;
     Vec2 _force;
     Vec2 _tap;
-    
+    int score = 0;
     Sprite* _snail;
     
 public:

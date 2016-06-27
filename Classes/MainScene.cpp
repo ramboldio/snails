@@ -6,6 +6,7 @@
 using namespace std;
 
 USING_NS_CC;
+Label *label_score;
 
 MainScene::MainScene(){}
 
@@ -21,6 +22,11 @@ Scene* MainScene::createScene() {
     
     return scene;
 }
+char* set_score_label(int _score){
+    char text[256];
+    sprintf(text,"Score: %d",_score);
+    return text;
+}
 
 bool MainScene::init() {
     
@@ -34,11 +40,16 @@ bool MainScene::init() {
     _delta = Vec2(0,0);
     _center = Vec2(_screenSize.width * 0.5, _screenSize.height * 0.5);
     
+   
     // exit-button
     auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png", CC_CALLBACK_1(MainScene::menuCloseCallback, this));
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
     //this->addChild(closeItem, 2);
     
+    label_score = Label::createWithTTF(set_score_label(score), "fonts/Marker Felt.ttf", 32);
+    label_score->setPosition(Vec2(0, visibleSize.height + origin.y));
+    this->addChild(label_score);
+
     
     // walls
     auto wallBody1 = PhysicsBody::createBox(
@@ -80,12 +91,12 @@ bool MainScene::init() {
     ground->setPhysicsBody(groundBody);
     this->addChild(ground, 1);
     
-    
     createSnail();
     
     // Camera
     float playfield_width = _screenSize.width * 2.0; // make the x-boundry 2 times the screen width
     float playfield_height = _screenSize.height * 2.0; // make the y-boundry 2 times the screen height
+    
     this->runAction(Follow::create(_snail, Rect( _center.x - playfield_width/2, _center.y - playfield_height/4 , playfield_width, playfield_height)));
     
     
@@ -106,8 +117,9 @@ bool MainScene::init() {
 void MainScene::createSnail() {
 
     // test-snail :)
-    _snail = Sprite::create("res/snail.png");
-    auto snailBody = PhysicsBody::createBox(Size(50.0f, 50.0f), PhysicsMaterial(1.0f, 0.1f, 1.0f));
+    _snail = Sprite::create("res/snail_base.png");
+    _snail->setScale( 0.2, 0.2);
+    auto snailBody = PhysicsBody::createBox(Size(_snail->getContentSize().width,_snail->getContentSize().height), PhysicsMaterial(1.0f, 0.1f, 1.0f));
     snailBody->setMass(10.0f);
     
     snailBody->setContactTestBitmask(0xFFFFFFFF);
@@ -137,6 +149,8 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
     for (auto touch : touches) {
         if (touch != nullptr) {
             _tap = touch->getLocation();
+            //_snail= Sprite::create("res/snail_touch.png");
+            
         }
     }
 }
