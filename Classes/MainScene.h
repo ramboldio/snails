@@ -10,6 +10,8 @@
 using namespace cocos2d;
 
 
+
+
 class MainScene : public Layer
 {
     Size _screenSize;

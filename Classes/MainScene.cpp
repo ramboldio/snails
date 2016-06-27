@@ -7,6 +7,7 @@ using namespace std;
 
 USING_NS_CC;
 
+
 MainScene::MainScene(){}
 
 MainScene::~MainScene(){}
@@ -24,6 +25,8 @@ Scene* MainScene::createScene() {
 
 bool MainScene::init() {
     
+    
+    
     if ( !Layer::init() ) {
         return false;
     }
@@ -36,6 +39,7 @@ bool MainScene::init() {
     
     // background
     auto space = Sprite::create("res/space.png");
+    //auto space = Sprite::create("res/bg_2.png");
     space->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y));
     this->addChild(space);
 
@@ -51,15 +55,21 @@ bool MainScene::init() {
     groundBody->setDynamic(false);
     ground->setPosition(Vec2(_center.x, 16.0f));
     ground->setPhysicsBody(groundBody);
+    ground->setScale(1.0f, 3.0f);
     
     this->addChild(ground, 1);
     
     
     // test-snail :)
-    _snail = Sprite::create("res/snail.png");
-    auto snailBody = PhysicsBody::createBox(Size(50.0f, 50.0f), PhysicsMaterial(0.5f, 0.4f, 1.0f));
+    //SpriteFrameCache::getInstance()->addSpriteFramesWithFile("res/spritesheet.plist");
+    //_snail = Sprite::createWithSpriteFrameName("snail_base.png");
+    
+    _snail = Sprite::create("res/snail_base.png");
+    auto snailBody = PhysicsBody::createBox(Size(1200.0f, 600.0f), PhysicsMaterial(0.5f, 0.2f, 5.0f));
     snailBody->setMass(10.0f);
-    _snail->setPosition(Vec2(400.0f, 500.0f));
+    //_snail->setPosition(Vec2(400.0f, 500.0f));
+    _snail->setPosition(Vec2(200.0f, 200.0f));
+    _snail->setScale(0.15);
     _snail->setPhysicsBody(snailBody);
     
     this->addChild(_snail, 2);
@@ -71,6 +81,7 @@ bool MainScene::init() {
     listener->onTouchEnded = CC_CALLBACK_2(MainScene::onTouchEnded, this);
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    
    
     return true;
 }
@@ -87,7 +98,7 @@ bool MainScene::onTouchBegan(Touch* touch, Event* event) {
     if (rect.containsPoint(locationInNode)) {
 
         log("toch began... x = %f, y = %f", locationInNode.x, locationInNode.y);
-        _snail->setTexture("res/snail_red.png");
+        _snail->setTexture("res/snail_touch_n.png");
         _delta = touch->getLocation();
         
         return true;
@@ -104,14 +115,12 @@ void MainScene::onTouchMoved(Touch* touch, Event* event) {
 
 void MainScene::onTouchEnded(Touch* touch, Event* event) {
     if (touch != nullptr) {
-        Vec2 force = Vec2( (_tap.x - _delta.x)*10.0f, 350 *10.0f + (_tap.y - _delta.y));
+        Vec2 force = Vec2( -(_tap.x - _delta.x)*10.0f, 350 *10.0f + (_tap.y - _delta.y));
         CCLOG("Force: %f %f", force.x, force.y);
         _snail->getPhysicsBody()->applyImpulse(force);
-        _snail->setTexture("res/snail.png");
+        _snail->setTexture("res/snail_air_lines_n.png");
     }
 }
-
-
 
 void MainScene::menuCloseCallback(Ref* pSender){
     Director::getInstance()->end();
