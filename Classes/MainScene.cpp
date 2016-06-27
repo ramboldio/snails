@@ -84,8 +84,8 @@ bool MainScene::init() {
     
     
     // ground
-    auto ground = Sprite::create("res/ground.png");
-    auto groundBody = PhysicsBody::createBox(Size(2048.0f, 50.0f), PhysicsMaterial(1.0f, 0.0f, 1.0f));
+    auto ground = Sprite::create("res/ground_new.png");
+    auto groundBody = PhysicsBody::createBox(Size(2048.0f, 200.0f), PhysicsMaterial(1.0f, 0.0f, 1.0f));
     groundBody->setDynamic(false);
     ground->setPosition(Vec2(_center.x, 16.0f));
     ground->setPhysicsBody(groundBody);
