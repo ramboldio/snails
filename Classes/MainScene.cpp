@@ -7,21 +7,22 @@ using namespace std;
 
 USING_NS_CC;
 Label *label_score;
-
+Scene *main_scene;
 MainScene::MainScene(){}
 
 MainScene::~MainScene(){}
 
 Scene* MainScene::createScene() {
     
-    auto scene = Scene::createWithPhysics();
+    main_scene = Scene::createWithPhysics();
     auto layer = MainScene::create();
-    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-    scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f));
-    scene->addChild(layer);
+    main_scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    main_scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f));
+    main_scene->addChild(layer);
     
-    return scene;
+    return main_scene;
 }
+
 char* set_score_label(int _score){
     char text[256];
     sprintf(text,"Score: %d",_score);
@@ -87,6 +88,8 @@ bool MainScene::init() {
     auto ground = Sprite::create("res/ground_new.png");
     auto groundBody = PhysicsBody::createBox(Size(2048.0f, 200.0f), PhysicsMaterial(1.0f, 0.0f, 1.0f));
     groundBody->setDynamic(false);
+    groundBody->setTag(0);
+    groundBody->setContactTestBitmask(0xFFFFFFFFF);
     ground->setPosition(Vec2(_center.x, 16.0f));
     ground->setPhysicsBody(groundBody);
     this->addChild(ground, 1);
@@ -113,6 +116,7 @@ bool MainScene::init() {
    
     return true;
 }
+
 PhysicsBody *createSnailBody(Sprite *snail_sprite){
     PhysicsBody *snail_body = PhysicsBody::createBox(Size(snail_sprite->getContentSize().width,
                                                        snail_sprite->getContentSize().height),
@@ -122,22 +126,41 @@ PhysicsBody *createSnailBody(Sprite *snail_sprite){
     snail_body->setCategoryBitmask(0x02);    // 0011
     snail_body->setCollisionBitmask(0x01);   // 0001
     snail_body->setRotationEnable(false);
+    snail_body->setTag(1);
+    
     return snail_body;
 }
 
 void MainScene::createSnail() {
     _snail = new Snail();
     _snail->getSprite()->setTexture("res/snail_base.png");
-    _snail->getSprite()->setPosition(Vec2(_center.x,190.0f));
-    _snail->getSprite()->setScale(0.2);
+    _snail->getSprite()->setPosition(Vec2(_center.x, 156.6f)); // log("%f ", _snail->getSprite()->getPosition().y);
+    _snail->getSprite()->setScale(0.1, 0.1);
     _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
     this->addChild(_snail->getSprite(), 2);
 }
 
 
-void MainScene::update(float dt) { }
+void MainScene::update(float dt) {
+    
+    if(_snail->ground_state and not _snail->base) {
+        _snail->getSprite()->setTexture("res/snail_base.png");
+        _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
+        _snail->base = true;
+    }
+}
 
-bool MainScene::onContactBegin(PhysicsContact& contact) { }
+bool MainScene::onContactBegin(PhysicsContact& contact) {
+    auto nodeA = contact.getShapeA()->getBody()->getNode();
+    auto nodeB = contact.getShapeB()->getBody()->getNode();
+    
+    if (nodeA && nodeB) { // ground and snail with ContactTestBitmask(0xFFFFFFFFF)
+        _snail->ground_state = true;
+    }
+
+    return true;
+}
+
 
 void MainScene::onTouchesBegan(const std::vector<Touch*> &touches, Event* event) {
     for (auto touch : touches) {
@@ -152,8 +175,8 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
         if (touch != nullptr) {
             _tap = touch->getLocation();
             _snail->getSprite()->setTexture("res/snail_touch.png");
+            _snail->base = false;
             _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
-            
         }
     }
 }
@@ -164,10 +187,16 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
             Vec2 tap = touch->getLocation();
             _force = Vec2( (tap.x - _delta.x)*10.0f, 350 *10.0f + (tap.y - _delta.y));
             CCLOG("Force: %f %f", _force.x, _force.y);
-            _snail->getSprite()->setTexture("res/snail_air.png");
-            _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
+            if (_force.x < 0) {
+                _snail->getSprite()->setScale(_snail->getSprite()->getScale() * -1, _snail->getSprite()->getScale());
+            } else _snail->getSprite()->setScale(0.1, 0.1);
 
+            _snail->getSprite()->setTexture("res/snail_air.png");
+            _snail->base = false;
+            
+            _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
             _snail->getSprite()->getPhysicsBody()->applyImpulse(_force);
+            _snail->ground_state = false;
         }
     }
 }
