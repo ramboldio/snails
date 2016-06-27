@@ -1,6 +1,7 @@
 #include "MainScene.h"
 #include "StartScene.h"
 #include "SimpleAudioEngine.h"
+#include "ui/CocosGUI.h"
 #include <cstring>
 #define COCOS2D_DEBUG 1
 using namespace std;
@@ -11,6 +12,7 @@ USING_NS_CC;
 MainScene::MainScene(){}
 
 MainScene::~MainScene(){}
+
 
 Scene* MainScene::createScene() {
     
@@ -49,6 +51,12 @@ bool MainScene::init() {
     //this->addChild(closeItem, 2);
     
     
+
+    
+
+
+
+    
     // ground
     auto ground = Sprite::create("res/ground.png");
     auto groundBody = PhysicsBody::createBox(Size(1024.0f, 50.0f), PhysicsMaterial(0.1f, 1.0f, 0.5f));
@@ -83,6 +91,28 @@ bool MainScene::init() {
     _snail->setPhysicsBody(snailBody);
     
     this->addChild(_snail, 2);
+    
+    
+    auto button = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png", "disabled_reButton.png");
+    button->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + visibleSize.height-closeItem->getContentSize().height/2));
+    
+    //button->setTitleText("Button Text");
+    
+    button->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type){
+        switch (type)
+        {
+            case ui::Widget::TouchEventType::BEGAN:
+                break;
+            case ui::Widget::TouchEventType::ENDED:
+                _snail->setPosition(Vec2(200.0f, 200.0f));
+                CCLOG("Button 1 clicked");
+                break;
+            default:
+                break;
+        }
+    });
+    
+    this->addChild(button);
     
     
     auto listener = EventListenerTouchOneByOne::create();
