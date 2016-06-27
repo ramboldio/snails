@@ -15,6 +15,7 @@ class MainScene : public Layer
     Size _screenSize;
     Vec2 _center;
     Vec2 _delta;
+    Vec2 _force;
     Vec2 _tap;
     
     Sprite* _snail;
@@ -29,9 +30,14 @@ public:
     
     CREATE_FUNC(MainScene);
     
-    bool onTouchBegan(Touch*, Event*);
-    void onTouchMoved(Touch*, Event*);
-    void onTouchEnded(Touch*, Event*);
+    void createSnail();
+    void onTouchesBegan(const std::vector<Touch*> &touches, cocos2d::Event* event);
+    void onTouchesMoved(const std::vector<Touch*> &touches, cocos2d::Event* event);
+    void onTouchesEnded(const std::vector<Touch*> &touches, cocos2d::Event* event);
+    bool onContactBegin(PhysicsContact& contact);
+
+private:
+    void update(float dt);
 };
 
 #endif // __MAIN_SCENE_H__
