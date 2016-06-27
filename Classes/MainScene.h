@@ -7,6 +7,8 @@
 
 #include "cocos2d.h"
 
+#define scaleFactorSnail 0.15f
+
 using namespace cocos2d;
 
 

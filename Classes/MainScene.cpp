@@ -50,11 +50,6 @@ bool MainScene::init() {
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
     //this->addChild(closeItem, 2);
     
-    
-
-    
-
-
 
     
     // ground
@@ -87,7 +82,7 @@ bool MainScene::init() {
     snailBody->setMass(10.0f);
     //_snail->setPosition(Vec2(400.0f, 500.0f));
     _snail->setPosition(Vec2(200.0f, 200.0f));
-    _snail->setScale(0.15);
+    _snail->setScale(scaleFactorSnail);
     _snail->setPhysicsBody(snailBody);
     
     this->addChild(_snail, 2);
@@ -113,6 +108,8 @@ bool MainScene::init() {
     });
     
     this->addChild(button);
+
+
     
     
     auto listener = EventListenerTouchOneByOne::create();
@@ -132,14 +129,15 @@ bool MainScene::onTouchBegan(Touch* touch, Event* event) {
     //Get the position of the current point relative to the button
     Point locationInNode = target->convertToNodeSpace(touch->getLocation());
     Size s = target->getContentSize();
-    Rect rect = Rect(0, 0, s.width, s.height);
+    //Rect rect = Rect(0, 0, s.width, s.height);
+    Rect rect = Rect(_snail->getPositionX()-_snail->getContentSize().width*scaleFactorSnail/2, _snail->getPositionY()- _snail->getContentSize().height*scaleFactorSnail/2, _snail->getContentSize().width*scaleFactorSnail, _snail->getContentSize().height*scaleFactorSnail);
     
     //Check the click area
     if (rect.containsPoint(locationInNode)) {
 
         log("toch began... x = %f, y = %f", locationInNode.x, locationInNode.y);
-        _snail->setTexture("res/norm/snail_touch.png");
         _delta = touch->getLocation();
+        _tap = touch->getLocation();
         
         return true;
     }
@@ -149,12 +147,13 @@ bool MainScene::onTouchBegan(Touch* touch, Event* event) {
 void MainScene::onTouchMoved(Touch* touch, Event* event) {
     if (touch != nullptr) {
         _tap = touch->getLocation();
+        _snail->setTexture("res/norm/snail_touch.png");
         log("tap... x = %f, y = %f", _tap.x, _tap.y);
     }
 }
 
 void MainScene::onTouchEnded(Touch* touch, Event* event) {
-    if (touch != nullptr) {
+    if (touch != nullptr && _tap.y - _delta.y!=0 && _tap.x - _delta.x != 0) {
         Vec2 force = Vec2( -(_tap.x - _delta.x)*10.0f, 350 *10.0f + (_tap.y - _delta.y));
         CCLOG("Force: %f %f", force.x, force.y);
         _snail->getPhysicsBody()->applyImpulse(force);
