@@ -42,6 +42,11 @@ bool MainScene::init() {
     space->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y));
     this->addChild(space);
 
+    // exit-button
+    auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png", CC_CALLBACK_1(MainScene::menuCloseCallback, this));
+    closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
+    //this->addChild(closeItem, 2);
+
     // ground
     auto ground = Sprite::create("res/ground.png");
     auto groundBody = PhysicsBody::createBox(Size(1024.0f, 50.0f), PhysicsMaterial(0.1f, 1.0f, 0.5f));
@@ -78,6 +83,28 @@ bool MainScene::init() {
     this->addChild(_snail, 2);
     
     
+    auto button = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png", "disabled_reButton.png");
+    button->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + visibleSize.height-closeItem->getContentSize().height/2));
+
+    //button->setTitleText("Button Text");
+
+    button->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type){
+        switch (type)
+        {
+            case ui::Widget::TouchEventType::BEGAN:
+                break;
+            case ui::Widget::TouchEventType::ENDED:
+                _snail->setPosition(Vec2(200.0f, 200.0f));
+                CCLOG("Button 1 clicked");
+                break;
+            default:
+                break;
+        }
+    });
+
+    this->addChild(button);
+
+
     auto listener = EventListenerTouchOneByOne::create();
     listener->onTouchBegan = CC_CALLBACK_2(MainScene::onTouchBegan, this);
     listener->onTouchMoved = CC_CALLBACK_2(MainScene::onTouchMoved, this);
