@@ -63,8 +63,8 @@ CMAKE_BINARY_DIR = /home/lukas/Projects/snails
 # Target rules for target CMakeFiles/MyGame.dir
 
 # All Build rule for target.
-CMakeFiles/MyGame.dir/all: cocos2d/external/bullet/CMakeFiles/bullet.dir/all
 CMakeFiles/MyGame.dir/all: CMakeFiles/MyGame_PRE_BUILD.dir/all
+CMakeFiles/MyGame.dir/all: cocos2d/external/bullet/CMakeFiles/bullet.dir/all
 CMakeFiles/MyGame.dir/all: cocos2d/external/recast/CMakeFiles/recast.dir/all
 CMakeFiles/MyGame.dir/all: cocos2d/external/tinyxml2/CMakeFiles/tinyxml2.dir/all
 CMakeFiles/MyGame.dir/all: cocos2d/external/unzip/CMakeFiles/unzip.dir/all
