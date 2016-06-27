@@ -97,7 +97,7 @@ bool MainScene::init() {
     float playfield_width = _screenSize.width * 2.0; // make the x-boundry 2 times the screen width
     float playfield_height = _screenSize.height * 2.0; // make the y-boundry 2 times the screen height
     
-    this->runAction(Follow::create(_snail, Rect( _center.x - playfield_width/2, _center.y - playfield_height/4 , playfield_width, playfield_height)));
+    this->runAction(Follow::create(_snail->getSprite(), Rect( _center.x - playfield_width/2, _center.y - playfield_height/4 , playfield_width, playfield_height)));
     
     
     auto listener = EventListenerTouchAllAtOnce::create();
@@ -117,9 +117,12 @@ bool MainScene::init() {
 void MainScene::createSnail() {
 
     // test-snail :)
-    _snail = Sprite::create("res/snail_base.png");
-    _snail->setScale( 0.2, 0.2);
-    auto snailBody = PhysicsBody::createBox(Size(_snail->getContentSize().width,_snail->getContentSize().height), PhysicsMaterial(1.0f, 0.1f, 1.0f));
+    _snail = new Snail();
+    _snail->setSprite(Sprite::create("res/snail_base.png"));
+    _snail->getSprite()->setScale( 0.2, 0.2);
+    auto snailBody = PhysicsBody::createBox(Size(_snail->getSprite()->getContentSize().width,
+                                                 _snail->getSprite()->getContentSize().height),
+                                            PhysicsMaterial(1.0f, 0.1f, 1.0f));
     snailBody->setMass(10.0f);
     
     snailBody->setContactTestBitmask(0xFFFFFFFF);
@@ -127,9 +130,9 @@ void MainScene::createSnail() {
     snailBody->setCollisionBitmask(0x01);   // 0001
     snailBody->setRotationEnable(false);
     
-    _snail->setPosition(Vec2(400.0f, 500.0f));
-    _snail->setPhysicsBody(snailBody);
-    this->addChild(_snail, 2);
+    _snail->getSprite()->setPosition(Vec2(400.0f, 500.0f));
+    _snail->getSprite()->setPhysicsBody(snailBody);
+    this->addChild(_snail->getSprite(), 2);
 }
 
 
@@ -161,7 +164,7 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
             Vec2 tap = touch->getLocation();
             _force = Vec2( (tap.x - _delta.x)*10.0f, 350 *10.0f + (tap.y - _delta.y));
             CCLOG("Force: %f %f", _force.x, _force.y);
-            _snail->getPhysicsBody()->applyImpulse(_force);
+            _snail->getSprite()->getPhysicsBody()->applyImpulse(_force);
         }
     }
 }
