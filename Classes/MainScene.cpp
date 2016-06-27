@@ -45,24 +45,28 @@ bool MainScene::init() {
     //this->addChild(closeItem, 2);
     
     
+    
     // ground
     auto ground = Sprite::create("res/ground.png");
-    auto groundBody = PhysicsBody::createBox(Size(1024.0f, 50.0f), PhysicsMaterial(0.1f, 1.0f, 0.5f));
+    auto groundBody = PhysicsBody::createBox(Size(2048.0f, 50.0f), PhysicsMaterial(0.1f, 1.0f, 0.5f));
     groundBody->setDynamic(false);
     ground->setPosition(Vec2(_center.x, 16.0f));
     ground->setPhysicsBody(groundBody);
-    
     this->addChild(ground, 1);
     
     
     // test-snail :)
     _snail = Sprite::create("res/snail.png");
-    auto snailBody = PhysicsBody::createBox(Size(50.0f, 50.0f), PhysicsMaterial(0.5f, 0.4f, 1.0f));
+    auto snailBody = PhysicsBody::createBox(Size(50.0f, 50.0f), PhysicsMaterial(1.0f, 0.1f, 1.0f));
     snailBody->setMass(10.0f);
     _snail->setPosition(Vec2(400.0f, 500.0f));
     _snail->setPhysicsBody(snailBody);
-    
     this->addChild(_snail, 2);
+    
+    // Camera
+    float playfield_width = _screenSize.width * 2.0; // make the x-boundry 2 times the screen width
+    float playfield_height = _screenSize.height * 1.0; // make the y-boundry 2 times the screen height
+    this->runAction(Follow::create(_snail, Rect( _center.x - playfield_width/2, _center.y - playfield_height/2 , playfield_width, playfield_height)));
     
     
     auto listener = EventListenerTouchOneByOne::create();
