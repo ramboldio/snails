@@ -15,7 +15,7 @@ Scene* MainScene::createScene() {
     
     auto scene = Scene::createWithPhysics();
     auto layer = MainScene::create();
-    
+    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
     scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f));
     scene->addChild(layer);
     
@@ -34,16 +34,42 @@ bool MainScene::init() {
     _delta = Vec2(0,0);
     _center = Vec2(_screenSize.width * 0.5, _screenSize.height * 0.5);
     
-    // background
-    auto space = Sprite::create("res/space.png");
-    space->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y));
-    this->addChild(space);
-
     // exit-button
     auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png", CC_CALLBACK_1(MainScene::menuCloseCallback, this));
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
     //this->addChild(closeItem, 2);
     
+    
+    // walls
+    auto wallBody1 = PhysicsBody::createBox(
+                                            Size(32.0f, origin.y + visibleSize.height),
+                                            PhysicsMaterial(0.1f, 1.0f, 0.5f)
+                                            );
+    auto wallBody2 = PhysicsBody::createBox(
+                                            Size(32.0f,  origin.y + visibleSize.height),
+                                            PhysicsMaterial(0.1f, 1.0f, 0.5f)
+                                            );
+    
+    
+    wallBody1->setDynamic(false);
+    wallBody1->setPositionOffset(Vec2(visibleSize.width, visibleSize.height-visibleSize.height/2));
+    wallBody1->setName("wall1");
+    wallBody1->setTag(1);
+    
+    wallBody2->setDynamic(false);
+    wallBody2->setPositionOffset(Vec2(-visibleSize.width, 0));
+    wallBody2->setName("wall2");
+    wallBody2->setTag(2);
+    
+    
+    this->addComponent(wallBody1);
+    this->addComponent(wallBody2);
+    
+    
+    // background
+    auto space = Sprite::create("res/space.png");
+    space->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y));
+    this->addChild(space);
     
     
     // ground
@@ -69,52 +95,51 @@ bool MainScene::init() {
     this->runAction(Follow::create(_snail, Rect( _center.x - playfield_width/2, _center.y - playfield_height/2 , playfield_width, playfield_height)));
     
     
-    auto listener = EventListenerTouchOneByOne::create();
-    listener->onTouchBegan = CC_CALLBACK_2(MainScene::onTouchBegan, this);
-    listener->onTouchMoved = CC_CALLBACK_2(MainScene::onTouchMoved, this);
-    listener->onTouchEnded = CC_CALLBACK_2(MainScene::onTouchEnded, this);
-    
+    auto listener = EventListenerTouchAllAtOnce::create();
+    listener->onTouchesBegan = CC_CALLBACK_2(MainScene::onTouchesBegan, this);
+    listener->onTouchesMoved = CC_CALLBACK_2(MainScene::onTouchesMoved, this);
+    listener->onTouchesEnded = CC_CALLBACK_2(MainScene::onTouchesEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    
+    auto contactListener = EventListenerPhysicsContact::create();
+    contactListener->onContactBegin = CC_CALLBACK_1(MainScene::onContactBegin, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+
    
     return true;
 }
 
-bool MainScene::onTouchBegan(Touch* touch, Event* event) {
-    auto target = static_cast<Sprite*>(event->getCurrentTarget());
 
-    //Get the position of the current point relative to the button
-    Point locationInNode = target->convertToNodeSpace(touch->getLocation());
-    Size s = target->getContentSize();
-    Rect rect = Rect(0, 0, s.width, s.height);
-    
-    //Check the click area
-    if (rect.containsPoint(locationInNode)) {
+void MainScene::update(float dt) { }
 
-        log("toch began... x = %f, y = %f", locationInNode.x, locationInNode.y);
-        _snail->setTexture("res/snail_red.png");
-        _delta = touch->getLocation();
-        
-        return true;
-    }
-    return false;
-}
+bool MainScene::onContactBegin(PhysicsContact& contact) { }
 
-void MainScene::onTouchMoved(Touch* touch, Event* event) {
-    if (touch != nullptr) {
-        _tap = touch->getLocation();
-        log("tap... x = %f, y = %f", _tap.x, _tap.y);
+void MainScene::onTouchesBegan(const std::vector<Touch*> &touches, Event* event) {
+    for (auto touch : touches) {
+        if (touch != nullptr) {
+            _delta = touch->getLocation();
+        }
     }
 }
 
-void MainScene::onTouchEnded(Touch* touch, Event* event) {
-    if (touch != nullptr) {
-        Vec2 force = Vec2( (_tap.x - _delta.x)*10.0f, 350 *10.0f + (_tap.y - _delta.y));
-        CCLOG("Force: %f %f", force.x, force.y);
-        _snail->getPhysicsBody()->applyImpulse(force);
-        _snail->setTexture("res/snail.png");
+void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event){
+    for (auto touch : touches) {
+        if (touch != nullptr) {
+            _tap = touch->getLocation();
+        }
     }
 }
 
+void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event) {
+    for (auto touch : touches) {
+        if (touch != nullptr) {
+            Vec2 tap = touch->getLocation();
+            _force = Vec2( (tap.x - _delta.x)*10.0f, 350 *10.0f + (tap.y - _delta.y));
+            CCLOG("Force: %f %f", _force.x, _force.y);
+            _snail->getPhysicsBody()->applyImpulse(_force);
+        }
+    }
+}
 
 
 void MainScene::menuCloseCallback(Ref* pSender){
