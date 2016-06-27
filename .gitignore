@@ -107,3 +107,4 @@ proj.win32/Release.*/
 # proj.win8.1-universal
 
 CMakeCache.txt
+.idea/workspace.xml
