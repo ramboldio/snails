@@ -4,6 +4,8 @@
 #define __MAIN_SCENE_H__
 
 #define TRANSITION_TIME 0.5
+#define FORCE_MULTIPLIER 11
+#define ANTI_GRAVITY 1.8
 
 #include "cocos2d.h"
 
@@ -16,8 +18,8 @@ class MainScene : public Layer
 {
     Size _screenSize;
     Vec2 _center;
-    Vec2 _delta;
-    Vec2 _tap;
+    Vec2 _touch_start;
+    Vec2 _touch_end;
     
     Sprite* _snail;
     

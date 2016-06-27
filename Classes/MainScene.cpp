@@ -33,7 +33,7 @@ bool MainScene::init() {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     _screenSize = visibleSize;
-    _delta = Vec2(0,0);
+    _touch_start = Vec2(0,0);
     _center = Vec2(_screenSize.width * 0.5f, _screenSize.height * 0.5f);
     
     // background
@@ -67,11 +67,7 @@ bool MainScene::init() {
     
     this->addChild(tree, 1);
     
-    
-    // test-snail :)
-    //SpriteFrameCache::getInstance()->addSpriteFramesWithFile("res/spritesheet.plist");
-    //_snail = Sprite::createWithSpriteFrameName("snail_base.png");
-    
+
     _snail = Sprite::create("res/norm/snail_base.png");
     auto snailBody = PhysicsBody::createBox(Size(1200.0f, 600.0f), PhysicsMaterial(0.5f, 0.2f, 5.0f));
     snailBody->setMass(10.0f);
@@ -85,8 +81,6 @@ bool MainScene::init() {
     
     auto button = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png", "disabled_reButton.png");
     button->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + visibleSize.height-closeItem->getContentSize().height/2));
-
-    //button->setTitleText("Button Text");
 
     button->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type){
         switch (type)
@@ -122,14 +116,15 @@ bool MainScene::onTouchBegan(Touch* touch, Event* event) {
     //Get the position of the current point relative to the button
     Point locationInNode = target->convertToNodeSpace(touch->getLocation());
     Size s = target->getContentSize();
-    Rect rect = Rect(0, 0, s.width, s.height);
+    Rect rect = _snail->getBoundingBox();
     
     //Check the click area
     if (rect.containsPoint(locationInNode)) {
 
         log("toch began... x = %f, y = %f", locationInNode.x, locationInNode.y);
         _snail->setTexture("res/norm/snail_touch.png");
-        _delta = touch->getLocation();
+        _touch_start = touch->getLocation();
+        _touch_end = touch->getLocation();
         
         return true;
     }
@@ -138,16 +133,33 @@ bool MainScene::onTouchBegan(Touch* touch, Event* event) {
 
 void MainScene::onTouchMoved(Touch* touch, Event* event) {
     if (touch != nullptr) {
-        _tap = touch->getLocation();
-        log("tap... x = %f, y = %f", _tap.x, _tap.y);
+        _touch_end = touch->getLocation();
     }
 }
 
 void MainScene::onTouchEnded(Touch* touch, Event* event) {
     if (touch != nullptr) {
-        Vec2 force = Vec2( -(_tap.x - _delta.x)*10.0f, 350 *10.0f + (_tap.y - _delta.y));
-        CCLOG("Force: %f %f", force.x, force.y);
-        _snail->getPhysicsBody()->applyImpulse(force);
+        float delta = _touch_start.distance(_touch_end);
+
+        // reject unintended touches
+        if (delta > 2) {
+
+            float max_pull = 500;
+
+            if (delta > max_pull) {
+                delta = max_pull;
+            }
+
+            log("Delta was %f",delta);
+            Vec2 travel = Vec2(_touch_end.x - _touch_start.x, _touch_end.y - _touch_start.y);
+
+            Vec2 force = travel.getNormalized() * delta * FORCE_MULTIPLIER * -1;
+            force.y = force.y * ANTI_GRAVITY;
+
+            log("Force: %f %f", force.x, force.y);
+            _snail->getPhysicsBody()->applyImpulse(force);
+        }
+        // Reset texture
         _snail->setTexture("res/norm/snail_air_lines.png");
     }
 }
