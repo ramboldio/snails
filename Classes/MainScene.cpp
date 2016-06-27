@@ -113,25 +113,24 @@ bool MainScene::init() {
    
     return true;
 }
+PhysicsBody *createSnailBody(Sprite *snail_sprite){
+    PhysicsBody *snail_body = PhysicsBody::createBox(Size(snail_sprite->getContentSize().width,
+                                                       snail_sprite->getContentSize().height),
+                                                  PhysicsMaterial(1.0f, 0.1f,1.0f));
+    snail_body->setMass(10.0f);
+    snail_body->setContactTestBitmask(0xFFFFFFFFF);
+    snail_body->setCategoryBitmask(0x02);    // 0011
+    snail_body->setCollisionBitmask(0x01);   // 0001
+    snail_body->setRotationEnable(false);
+    return snail_body;
+}
 
 void MainScene::createSnail() {
-
-    // test-snail :)
     _snail = new Snail();
-    _snail->setSprite(Sprite::create("res/snail_base.png"));
-    _snail->getSprite()->setScale( 0.2, 0.2);
-    auto snailBody = PhysicsBody::createBox(Size(_snail->getSprite()->getContentSize().width,
-                                                 _snail->getSprite()->getContentSize().height),
-                                            PhysicsMaterial(1.0f, 0.1f, 1.0f));
-    snailBody->setMass(10.0f);
-    
-    snailBody->setContactTestBitmask(0xFFFFFFFF);
-    snailBody->setCategoryBitmask(0x02);    // 0011
-    snailBody->setCollisionBitmask(0x01);   // 0001
-    snailBody->setRotationEnable(false);
-    
-    _snail->getSprite()->setPosition(Vec2(400.0f, 500.0f));
-    _snail->getSprite()->setPhysicsBody(snailBody);
+    _snail->getSprite()->setTexture("res/snail_base.png");
+    _snail->getSprite()->setPosition(Vec2(_center.x,190.0f));
+    _snail->getSprite()->setScale(0.2);
+    _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
     this->addChild(_snail->getSprite(), 2);
 }
 
@@ -152,7 +151,8 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
     for (auto touch : touches) {
         if (touch != nullptr) {
             _tap = touch->getLocation();
-            //_snail= Sprite::create("res/snail_touch.png");
+            _snail->getSprite()->setTexture("res/snail_touch.png");
+            _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
             
         }
     }
@@ -164,6 +164,9 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
             Vec2 tap = touch->getLocation();
             _force = Vec2( (tap.x - _delta.x)*10.0f, 350 *10.0f + (tap.y - _delta.y));
             CCLOG("Force: %f %f", _force.x, _force.y);
+            _snail->getSprite()->setTexture("res/snail_air.png");
+            _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
+
             _snail->getSprite()->getPhysicsBody()->applyImpulse(_force);
         }
     }

@@ -12,6 +12,7 @@ class Snail : public Layer
     Sprite *snail_sprite;
     
 public:
+    bool ground_state;
     Snail();
     virtual ~Snail();
     void setHealth(int _health);

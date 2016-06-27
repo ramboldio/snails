@@ -2,7 +2,7 @@
 
 Snail::Snail(void){
     this->snail_sprite = Sprite::create("res/snail_base.png");
-    //this->health = 5;
+        this->health = 5;
 }
 
 Snail::~Snail(){}
