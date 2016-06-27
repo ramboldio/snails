@@ -1,6 +1,4 @@
 #include "MainScene.h"
-#include "StartScene.h"
-#include "SimpleAudioEngine.h"
 #include <cstring>
 #define COCOS2D_DEBUG 1
 using namespace std;
@@ -25,8 +23,6 @@ Scene* MainScene::createScene() {
 
 bool MainScene::init() {
     
-    
-    
     if ( !Layer::init() ) {
         return false;
     }
@@ -35,7 +31,7 @@ bool MainScene::init() {
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     _screenSize = visibleSize;
     _delta = Vec2(0,0);
-    _center = Vec2(_screenSize.width * 0.5, _screenSize.height * 0.5);
+    _center = Vec2(_screenSize.width * 0.5f, _screenSize.height * 0.5f);
     
     // background
     auto space = Sprite::create("res/space.png");
@@ -46,9 +42,8 @@ bool MainScene::init() {
     // exit-button
     auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png", CC_CALLBACK_1(MainScene::menuCloseCallback, this));
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
-    //this->addChild(closeItem, 2);
-    
-    
+    this->addChild(closeItem, 2);
+
     // ground
     auto ground = Sprite::create("res/ground.png");
     auto groundBody = PhysicsBody::createBox(Size(1024.0f, 50.0f), PhysicsMaterial(0.1f, 1.0f, 0.5f));
