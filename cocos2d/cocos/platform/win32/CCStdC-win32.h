@@ -46,8 +46,8 @@ typedef SSIZE_T ssize_t;
 #endif
 
 #if _MSC_VER < 1800
-#if !defined(isnan)
-    #define isnan   _isnan
+#if !defined(std::isnan)
+    #define std::isnan   _std::isnan
 #endif
 #endif
 
@@ -120,9 +120,9 @@ NS_CC_END
 #undef _WINSOCKAPI_
 #include <winsock2.h>
 
-// Conflicted with math.h isnan
+// Conflicted with math.h std::isnan
 #include <cmath>
-using std::isnan;
+using std::std::isnan;
 
 inline int vsnprintf_s(char *buffer, size_t sizeOfBuffer, size_t count,
                  const char *format, va_list argptr) {

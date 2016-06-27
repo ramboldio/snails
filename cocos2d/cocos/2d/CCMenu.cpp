@@ -402,7 +402,7 @@ void Menu::alignItemsInColumnsWithArray(const ValueVector& rows)
         CCASSERT(rowColumns, "rowColumns can't be 0.");
         
         float tmp = child->getContentSize().height;
-        rowHeight = (unsigned int)((rowHeight >= tmp || isnan(tmp)) ? rowHeight : tmp);
+        rowHeight = (unsigned int)((rowHeight >= tmp || std::isnan(tmp)) ? rowHeight : tmp);
         
         ++columnsOccupied;
         if (columnsOccupied >= rowColumns)
@@ -436,7 +436,7 @@ void Menu::alignItemsInColumnsWithArray(const ValueVector& rows)
         }
 
         float tmp = child->getContentSize().height;
-        rowHeight = (unsigned int)((rowHeight >= tmp || isnan(tmp)) ? rowHeight : tmp);
+        rowHeight = (unsigned int)((rowHeight >= tmp || std::isnan(tmp)) ? rowHeight : tmp);
 
         child->setPosition(x - winSize.width / 2,
                                y - child->getContentSize().height / 2);
@@ -499,7 +499,7 @@ void Menu::alignItemsInRowsWithArray(const ValueVector& columns)
 
         // columnWidth = fmaxf(columnWidth, [item contentSize].width);
         float tmp = child->getContentSize().width;
-        columnWidth = (unsigned int)((columnWidth >= tmp || isnan(tmp)) ? columnWidth : tmp);
+        columnWidth = (unsigned int)((columnWidth >= tmp || std::isnan(tmp)) ? columnWidth : tmp);
 
         columnHeight += (int)(child->getContentSize().height + 5);
         ++rowsOccupied;
@@ -537,7 +537,7 @@ void Menu::alignItemsInRowsWithArray(const ValueVector& columns)
 
         // columnWidth = fmaxf(columnWidth, [item contentSize].width);
         float tmp = child->getContentSize().width;
-        columnWidth = (unsigned int)((columnWidth >= tmp || isnan(tmp)) ? columnWidth : tmp);
+        columnWidth = (unsigned int)((columnWidth >= tmp || std::isnan(tmp)) ? columnWidth : tmp);
 
         child->setPosition(x + columnWidths[column] / 2,
                                y - winSize.height / 2);

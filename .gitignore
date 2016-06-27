@@ -84,6 +84,9 @@ proj.ios_mac/*.xcodeproj/xcuserdata/
 !*.pch
 
 # proj.linux
+linux-build/
+bin/
+
 
 # proj.win32
 cocos2d/cocos/2d/Debug.*/
@@ -103,4 +106,4 @@ proj.win32/Release.*/
 
 # proj.win8.1-universal
 
-# others
+CMakeCache.txt

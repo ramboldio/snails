@@ -90,7 +90,7 @@ bool jsval_to_int32( JSContext *cx, JS::HandleValue vp, int32_t *outval )
         LOGD("jsval_to_int32: the argument is not a number");
         return false;
     }
-    ok &= !isnan(dp);
+    ok &= !std::isnan(dp);
     JSB_PRECONDITION2(ok, cx, false, "Error processing arguments");
 
     *outval = (int32_t)dp;
@@ -107,7 +107,7 @@ bool jsval_to_uint32( JSContext *cx, JS::HandleValue vp, uint32_t *outval )
         LOGD("jsval_to_uint32: the argument is not a number");
         return false;
     }
-    ok &= !isnan(dp);
+    ok &= !std::isnan(dp);
     JSB_PRECONDITION2(ok, cx, false, "Error processing arguments");
 
     *outval = (uint32_t)dp;
@@ -124,7 +124,7 @@ bool jsval_to_uint16( JSContext *cx, JS::HandleValue vp, uint16_t *outval )
         LOGD("jsval_to_uint16: the argument is not a number");
         return false;
     }
-    ok &= !isnan(dp);
+    ok &= !std::isnan(dp);
     JSB_PRECONDITION2(ok, cx, false, "Error processing arguments");
 
     *outval = (uint16_t)dp;
@@ -161,7 +161,7 @@ bool jsval_to_long(JSContext *cx, JS::HandleValue vp, long* ret)
         LOGD("jsval_to_long: the argument is not a number");
         return false;
     }
-    ok &= !isnan(dp);
+    ok &= !std::isnan(dp);
     JSB_PRECONDITION2(ok, cx, false, "Error processing arguments");
 
     *ret = (long)dp;
