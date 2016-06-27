@@ -1,4 +1,7 @@
 #include "MainScene.h"
+#include "StartScene.h"
+#include "SimpleAudioEngine.h"
+#include "ui/CocosGUI.h"
 #include <cstring>
 #define COCOS2D_DEBUG 1
 using namespace std;
@@ -22,7 +25,7 @@ Scene* MainScene::createScene() {
 }
 
 bool MainScene::init() {
-    
+
     if ( !Layer::init() ) {
         return false;
     }
@@ -38,11 +41,6 @@ bool MainScene::init() {
     //auto space = Sprite::create("res/bg_2.png");
     space->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y));
     this->addChild(space);
-
-    // exit-button
-    auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png", CC_CALLBACK_1(MainScene::menuCloseCallback, this));
-    closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
-    this->addChild(closeItem, 2);
 
     // ground
     auto ground = Sprite::create("res/ground.png");

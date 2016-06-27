@@ -26,6 +26,7 @@ public:
     virtual ~MainScene();
     virtual bool init();
     void menuCloseCallback(Ref* pSender);
+    void respawn();
     
     static Scene* createScene();
     
