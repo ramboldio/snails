@@ -46,7 +46,7 @@ bool MainScene::init() {
                                             PhysicsMaterial(0.1f, 1.0f, 0.5f)
                                             );
     auto wallBody2 = PhysicsBody::createBox(
-                                            Size(32.0f,  origin.y + visibleSize.height),
+                                            Size(32.0f,  origin.y + visibleSize.height*3),
                                             PhysicsMaterial(0.1f, 1.0f, 0.5f)
                                             );
     
@@ -74,25 +74,19 @@ bool MainScene::init() {
     
     // ground
     auto ground = Sprite::create("res/ground.png");
-    auto groundBody = PhysicsBody::createBox(Size(2048.0f, 50.0f), PhysicsMaterial(0.1f, 1.0f, 0.5f));
+    auto groundBody = PhysicsBody::createBox(Size(2048.0f, 50.0f), PhysicsMaterial(1.0f, 0.0f, 1.0f));
     groundBody->setDynamic(false);
     ground->setPosition(Vec2(_center.x, 16.0f));
     ground->setPhysicsBody(groundBody);
     this->addChild(ground, 1);
     
     
-    // test-snail :)
-    _snail = Sprite::create("res/snail.png");
-    auto snailBody = PhysicsBody::createBox(Size(50.0f, 50.0f), PhysicsMaterial(1.0f, 0.1f, 1.0f));
-    snailBody->setMass(10.0f);
-    _snail->setPosition(Vec2(400.0f, 500.0f));
-    _snail->setPhysicsBody(snailBody);
-    this->addChild(_snail, 2);
+    createSnail();
     
     // Camera
     float playfield_width = _screenSize.width * 2.0; // make the x-boundry 2 times the screen width
-    float playfield_height = _screenSize.height * 1.0; // make the y-boundry 2 times the screen height
-    this->runAction(Follow::create(_snail, Rect( _center.x - playfield_width/2, _center.y - playfield_height/2 , playfield_width, playfield_height)));
+    float playfield_height = _screenSize.height * 2.0; // make the y-boundry 2 times the screen height
+    this->runAction(Follow::create(_snail, Rect( _center.x - playfield_width/2, _center.y - playfield_height/4 , playfield_width, playfield_height)));
     
     
     auto listener = EventListenerTouchAllAtOnce::create();
@@ -107,6 +101,23 @@ bool MainScene::init() {
 
    
     return true;
+}
+
+void MainScene::createSnail() {
+
+    // test-snail :)
+    _snail = Sprite::create("res/snail.png");
+    auto snailBody = PhysicsBody::createBox(Size(50.0f, 50.0f), PhysicsMaterial(1.0f, 0.1f, 1.0f));
+    snailBody->setMass(10.0f);
+    
+    snailBody->setContactTestBitmask(0xFFFFFFFF);
+    snailBody->setCategoryBitmask(0x02);    // 0011
+    snailBody->setCollisionBitmask(0x01);   // 0001
+    snailBody->setRotationEnable(false);
+    
+    _snail->setPosition(Vec2(400.0f, 500.0f));
+    _snail->setPhysicsBody(snailBody);
+    this->addChild(_snail, 2);
 }
 
 

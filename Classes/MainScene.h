@@ -30,6 +30,7 @@ public:
     
     CREATE_FUNC(MainScene);
     
+    void createSnail();
     void onTouchesBegan(const std::vector<Touch*> &touches, cocos2d::Event* event);
     void onTouchesMoved(const std::vector<Touch*> &touches, cocos2d::Event* event);
     void onTouchesEnded(const std::vector<Touch*> &touches, cocos2d::Event* event);
