@@ -30,8 +30,8 @@ bool StartScene::init() {
     
     
     
-    auto start_btn = MenuItemImage::create("res/btn_normal.png", "res/btn_clicked.png", CC_CALLBACK_1(StartScene::GoToMainScene, this) );
-    start_btn->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y  - start_btn->getContentSize().height));
+    auto start_btn = MenuItemImage::create("res/button.png", "res/button_clicked.png", CC_CALLBACK_1(StartScene::GoToMainScene, this) );
+    start_btn->setPosition(Vec2(visibleSize.width/1.5, visibleSize.height + origin.y  - start_btn->getContentSize().height));
     
     auto menu = Menu::create(start_btn, NULL);
     menu->setPosition(Point::ZERO);
