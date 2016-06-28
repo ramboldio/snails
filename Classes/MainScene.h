@@ -6,13 +6,20 @@
 #define TRANSITION_TIME 0.5
 
 #include "cocos2d.h"
+#include "Snail.h"
 
 using namespace cocos2d;
 
 
 class MainScene : public Layer
 {
-    Size screenSize;
+    Size _screenSize;
+    Vec2 _center;
+    Vec2 _delta;
+    Vec2 _force;
+    Vec2 _tap;
+    int score = 0;
+    Snail* _snail;
     
 public:
     MainScene();
@@ -23,6 +30,15 @@ public:
     static Scene* createScene();
     
     CREATE_FUNC(MainScene);
+    
+    void createSnail();
+    void onTouchesBegan(const std::vector<Touch*> &touches, cocos2d::Event* event);
+    void onTouchesMoved(const std::vector<Touch*> &touches, cocos2d::Event* event);
+    void onTouchesEnded(const std::vector<Touch*> &touches, cocos2d::Event* event);
+    bool onContactBegin(PhysicsContact& contact);
+
+private:
+    void update(float dt);
 };
 
 #endif // __MAIN_SCENE_H__
