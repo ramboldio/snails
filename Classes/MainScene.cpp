@@ -90,7 +90,7 @@ bool MainScene::init() {
     game_layer->addComponent(wallBody2);
     
     // background
-    auto space = Sprite::create("res/space.png");
+    auto space = Sprite::create("res/background_main.png");
     space->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y));
     game_layer->addChild(space);
     
