@@ -13,6 +13,7 @@ class Snail : public Layer
     
 public:
     bool ground_state;
+    bool air_state;
     bool base;
     Snail();
     virtual ~Snail();
