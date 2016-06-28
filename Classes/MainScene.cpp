@@ -3,22 +3,32 @@
 #include "SimpleAudioEngine.h"
 #include <cstring>
 #define COCOS2D_DEBUG 1
+
 using namespace std;
 
 USING_NS_CC;
+
 Label *label_score;
 Scene *main_scene;
-MainScene::MainScene(){}
 
+Node *game_layer;
+Node *menu_layer;
+
+MainScene::MainScene(){}
 MainScene::~MainScene(){}
+
+
 
 Scene* MainScene::createScene() {
     
-    main_scene = Scene::createWithPhysics();
+    auto main_scene = Scene::createWithPhysics();
     auto layer = MainScene::create();
-    main_scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    
+    /*
+        main_scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    */
     main_scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f));
-    main_scene->addChild(layer);
+    main_scene->addChild(layer, 0, 0);
     
     return main_scene;
 }
@@ -30,11 +40,21 @@ char* set_score_label(int _score){
     return text;
 }
 
+
 bool MainScene::init() {
     
     if ( !Layer::init() ) {
         return false;
     }
+    
+    game_layer = Node::create();
+    game_layer->setName("game_layer");
+    menu_layer = Node::create();
+    menu_layer->setName("menu_layer");
+    
+    this->addChild(game_layer);
+    this->addChild(menu_layer, 1);
+    
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -42,48 +62,40 @@ bool MainScene::init() {
     _delta = Vec2(0,0);
     _center = Vec2(_screenSize.width * 0.5, _screenSize.height * 0.5);
     
-   
-    // exit-button
+    /* exit-button
     auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png", CC_CALLBACK_1(MainScene::menuCloseCallback, this));
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
-    //this->addChild(closeItem, 2);
+    menu_layer->addChild(closeItem, 3); */
     
     label_score = Label::createWithTTF(set_score_label(score), "fonts/Marker Felt.ttf", 32);
-    label_score->setPosition(Vec2(0, visibleSize.height + origin.y));
-    this->addChild(label_score);
+    label_score->setPosition(Vec2(label_score->getContentSize().width, visibleSize.height - label_score->getContentSize().height));
+    menu_layer->addChild(label_score, 3);
 
     
     // walls
     auto wallBody1 = PhysicsBody::createBox(
                                             Size(32.0f, origin.y + visibleSize.height),
-                                            PhysicsMaterial(0.1f, 1.0f, 0.5f)
-                                            );
+                                            PhysicsMaterial(0.1f, 1.0f, 0.5f) );
     auto wallBody2 = PhysicsBody::createBox(
                                             Size(32.0f,  origin.y + visibleSize.height*3),
-                                            PhysicsMaterial(0.1f, 1.0f, 0.5f)
-                                            );
-    
-    
+                                            PhysicsMaterial(0.1f, 1.0f, 0.5f) );
     wallBody1->setDynamic(false);
     wallBody1->setPositionOffset(Vec2(visibleSize.width, visibleSize.height-visibleSize.height/2));
     wallBody1->setName("wall1");
     wallBody1->setTag(1);
     
     wallBody2->setDynamic(false);
-    wallBody2->setPositionOffset(Vec2(-visibleSize.width, 0));
+    wallBody2->setPositionOffset(Vec2(-visibleSize.width/2, 0));
     wallBody2->setName("wall2");
     wallBody2->setTag(2);
     
-    
-    this->addComponent(wallBody1);
-    this->addComponent(wallBody2);
-    
+    game_layer->addComponent(wallBody1);
+    game_layer->addComponent(wallBody2);
     
     // background
     auto space = Sprite::create("res/space.png");
     space->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y));
-    this->addChild(space);
-    
+    game_layer->addChild(space);
     
     // ground
     auto ground = Sprite::create("res/ground_new.png");
@@ -93,15 +105,16 @@ bool MainScene::init() {
     groundBody->setContactTestBitmask(0xFFFFFFFFF);
     ground->setPosition(Vec2(_center.x, 16.0f));
     ground->setPhysicsBody(groundBody);
-    this->addChild(ground, 1);
+    game_layer->addChild(ground, 1);
     
     createSnail();
     
     // Camera
     float playfield_width = _screenSize.width * 2.0; // make the x-boundry 2 times the screen width
     float playfield_height = _screenSize.height * 2.0; // make the y-boundry 2 times the screen height
-    
-    this->runAction(Follow::create(_snail->getSprite(), Rect( _center.x - playfield_width/2, _center.y - playfield_height/4 , playfield_width, playfield_height)));
+    game_layer->runAction(Follow::create( _snail->getSprite(),
+                                   Rect( _center.x - playfield_width/2, _center.y - playfield_height/4 ,
+                                        playfield_width, playfield_height) ) );
     
     
     auto listener = EventListenerTouchAllAtOnce::create();
@@ -138,7 +151,7 @@ void MainScene::createSnail() {
     _snail->getSprite()->setPosition(Vec2(_center.x, 156.6f)); // log("%f ", _snail->getSprite()->getPosition().y);
     _snail->getSprite()->setScale(0.1, 0.1);
     _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
-    this->addChild(_snail->getSprite(), 2);
+    game_layer->addChild(_snail->getSprite(), 2);
 }
 
 
