@@ -8,6 +8,17 @@ using namespace std;
 
 USING_NS_CC;
 
+/*
+ * TODOs
+ * Physics Body -> Polygon
+ * no click when flying 
+ * Track Landing 
+ * Goal
+ * Game End Screen
+ * Score Counter (Distance + Tries)
+ * Move Perspective / Background
+ */
+
 
 MainScene::MainScene(){}
 
@@ -67,6 +78,7 @@ bool MainScene::init() {
     auto treeBody = PhysicsBody::createBox(Size(100.0f, 500.0f), PhysicsMaterial(0.1f, 1.0f, 0.5f));
     treeBody->setDynamic(false);
     tree->setPosition(Vec2(800.0f, 250.0f));
+    //tree->setPosition(Vec2(200.0f, 250.0f));
     tree->setPhysicsBody(treeBody);
     tree->setScale(0.4);
     
@@ -77,10 +89,15 @@ bool MainScene::init() {
     //SpriteFrameCache::getInstance()->addSpriteFramesWithFile("res/spritesheet.plist");
     //_snail = Sprite::createWithSpriteFrameName("snail_base.png");
     
-    _snail = Sprite::create("res/norm/snail_base.png");
+    //_snail = Sprite::create("res/norm/snail_base.png");
+    
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("res/norm/spritesheettest.plist");
+    
+    _snail = Sprite::createWithSpriteFrameName("snail_base.png");
+    
     auto snailBody = PhysicsBody::createBox(Size(1200.0f, 600.0f), PhysicsMaterial(0.5f, 0.2f, 5.0f));
     snailBody->setMass(10.0f);
-    //_snail->setPosition(Vec2(400.0f, 500.0f));
+    _snail->setPosition(Vec2(400.0f, 500.0f));
     _snail->setPosition(Vec2(200.0f, 200.0f));
     _snail->setScale(scaleFactorSnail);
     _snail->setPhysicsBody(snailBody);
@@ -154,7 +171,7 @@ void MainScene::onTouchMoved(Touch* touch, Event* event) {
 
 void MainScene::onTouchEnded(Touch* touch, Event* event) {
     if (touch != nullptr && _tap.y - _delta.y!=0 && _tap.x - _delta.x != 0) {
-        Vec2 force = Vec2( -(_tap.x - _delta.x)*10.0f, 350 *10.0f + (_tap.y - _delta.y));
+        Vec2 force = Vec2( -(_tap.x - _delta.x)*20.0f, 350 + (abs(_tap.y - _delta.y))*20.0f);
         CCLOG("Force: %f %f", force.x, force.y);
         _snail->getPhysicsBody()->applyImpulse(force);
         _snail->setTexture("res/norm/snail_air_lines.png");
