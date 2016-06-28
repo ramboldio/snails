@@ -23,6 +23,7 @@ Scene* MainScene::createScene() {
     return main_scene;
 }
 
+
 char* set_score_label(int _score){
     char text[256];
     sprintf(text,"Score: %d",_score);
