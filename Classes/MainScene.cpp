@@ -189,7 +189,7 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
             _force = Vec2( (tap.x - _delta.x)*10.0f, 350 *10.0f + (tap.y - _delta.y));
             CCLOG("Force: %f %f", _force.x, _force.y);
             if (_force.x < 0) {
-                _snail->getSprite()->setScale(_snail->getSprite()->getScale() * -1, _snail->getSprite()->getScale());
+                _snail->getSprite()->setScale(0.1 * -1, 0.1);
             } else _snail->getSprite()->setScale(0.1, 0.1);
 
             _snail->getSprite()->setTexture("res/snail_air.png");
