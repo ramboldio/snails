@@ -95,7 +95,7 @@ bool MainScene::init() {
     game_layer->addChild(space);
     
     // ground
-    auto ground = Sprite::create("res/ground_new.png");
+    auto ground = Sprite::create("res/ground.png");
     auto groundBody = PhysicsBody::createBox(Size(2048.0f, 200.0f), PhysicsMaterial(1.0f, 0.0f, 1.0f));
     groundBody->setDynamic(false);
     groundBody->setTag(0);
