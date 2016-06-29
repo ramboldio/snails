@@ -28,16 +28,12 @@ bool StartScene::init() {
     
     this->addChild( backgroundSprite );
     
-    auto gameover_label = Label::createWithTTF("Snails Game!", "fonts/Marker Felt.ttf", 32);
-    gameover_label->setColor(Color3B(0, 0, 0));
-    gameover_label->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y));
     
-    this->addChild(gameover_label, 1);
     
-    auto retryItem = MenuItemImage::create("res/btn_normal.png", "res/btn_clicked.png", CC_CALLBACK_1(StartScene::GoToMainScene, this) );
-    retryItem->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y - gameover_label->getContentSize().height - retryItem->getContentSize().height));
+    auto start_btn = MenuItemImage::create("res/button.png", "res/button_clicked.png", CC_CALLBACK_1(StartScene::GoToMainScene, this) );
+    start_btn->setPosition(Vec2(visibleSize.width/1.5, visibleSize.height + origin.y  - start_btn->getContentSize().height));
     
-    auto menu = Menu::create(retryItem, NULL);
+    auto menu = Menu::create(start_btn, NULL);
     menu->setPosition(Point::ZERO);
     
     this->addChild(menu);

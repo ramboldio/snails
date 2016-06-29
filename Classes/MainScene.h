@@ -6,6 +6,7 @@
 #define TRANSITION_TIME 0.5
 
 #include "cocos2d.h"
+#include "Snail.h"
 
 using namespace cocos2d;
 
@@ -17,8 +18,8 @@ class MainScene : public Layer
     Vec2 _delta;
     Vec2 _force;
     Vec2 _tap;
-    
-    Sprite* _snail;
+    int score = 0;
+    Snail* _snail;
     
 public:
     MainScene();
