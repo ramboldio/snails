@@ -107,3 +107,5 @@ proj.win32/Release.*/
 .idea
 
 cocos2d
+
+linux-build
