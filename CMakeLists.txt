@@ -123,16 +123,18 @@ if ( WIN32 )
 endif( WIN32 )
 
 set(GAME_SRC
-  Classes/AppDelegate.cpp
-  Classes/MainScene.cpp
-  Classes/StartScene.cpp
+        Classes/AppDelegate.cpp
+        Classes/MainScene.cpp
+        Classes/StartScene.cpp
+        Classes/Snail.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
 set(GAME_HEADERS
-  Classes/AppDelegate.h
-  Classes/MainScene.h
-  Classes/StartScene.h
+        Classes/AppDelegate.h
+        Classes/MainScene.h
+        Classes/StartScene.h
+        Classes/Snail.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
