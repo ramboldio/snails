@@ -105,3 +105,5 @@ proj.win32/Release.*/
 
 # others
 .idea
+
+cocos2d
