@@ -1,0 +1,11 @@
+{
+    "sheets": [
+        { 
+            "coordinatesFileName": "spritesheets.plist",
+            "textureFileName": "spritesheets.png",
+            "width": 1388.0,
+            "height": 2062.0
+        }
+    ],
+    "signature": "78192bfc081b1dc15486c9fee061670a9199fefa"
+}

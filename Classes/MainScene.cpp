@@ -37,6 +37,28 @@ char* set_score_label(int _score){
     return text;
 }
 
+Vector<SpriteFrame*> getAnimation(const char *format, int count) {
+    auto spritecache = SpriteFrameCache::getInstance();
+    Vector<SpriteFrame*> animFrames;
+    char str[100];
+    for(int i = 1; i <= count; i++) {
+        sprintf(str, format, i);
+        animFrames.pushBack(spritecache->getSpriteFrameByName(str));
+    }
+    return animFrames;
+}
+
+void spriteAction(char* name, Node* _sun, int sp_count) {
+    char sp_way[50];
+    strcpy(sp_way, name);
+    strcat(sp_way, "_%d.png");
+    auto frames = getAnimation(sp_way, sp_count);
+    auto animation = Animation::createWithSpriteFrames(frames, 1.0f/8);
+    _sun->runAction(RepeatForever::create(Animate::create(animation)));
+}
+
+
+
 
 bool MainScene::init() {
     
@@ -59,6 +81,16 @@ bool MainScene::init() {
     _delta = Vec2(0,0);
     _center = Vec2(_screenSize.width * 0.5, _screenSize.height * 0.5);
     
+    
+    // SPRITESHEETS
+    SpriteBatchNode* spritebatch = SpriteBatchNode::create("res/spritesheets.png");
+    game_layer->addChild(spritebatch, 1);
+    
+    SpriteFrameCache* cache = SpriteFrameCache::getInstance();
+    cache->addSpriteFramesWithFile("res/spritesheets.plist");
+    
+    
+    //  MENU
     /* exit-button
     auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png", CC_CALLBACK_1(MainScene::menuCloseCallback, this));
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
@@ -69,13 +101,19 @@ bool MainScene::init() {
     menu_layer->addChild(label_score, 3);
 
     
-    // walls
+    
+    //  OBJECTS
+    
+    //      snail
+    createSnail();
+    
+    //      walls
     auto wallBody1 = PhysicsBody::createBox(
                                             Size(32.0f, origin.y + visibleSize.height),
-                                            PhysicsMaterial(0.1f, 1.0f, 0.5f) );
+                                            PhysicsMaterial(0.0f, 0.0f, 0.0f) );
     auto wallBody2 = PhysicsBody::createBox(
                                             Size(32.0f,  origin.y + visibleSize.height*3),
-                                            PhysicsMaterial(0.1f, 1.0f, 0.5f) );
+                                            PhysicsMaterial(0.0f, 0.0f, 0.0f) );
     wallBody1->setDynamic(false);
     wallBody1->setPositionOffset(Vec2(visibleSize.width, visibleSize.height-visibleSize.height/2));
     wallBody1->setName("wall1");
@@ -89,12 +127,17 @@ bool MainScene::init() {
     game_layer->addComponent(wallBody1);
     game_layer->addComponent(wallBody2);
     
-    // background
-    auto space = Sprite::create("res/background_main.png");
-    space->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y));
+    //      background
+    auto space = Sprite::create("res/space_bg.png");
+    space->setPosition(Vec2(visibleSize.width/2  + origin.x, 0));
     game_layer->addChild(space);
     
-    // ground
+    auto sun = Sprite::createWithSpriteFrameName("sun_1.png");
+    sun->setPosition(_center.x, _center.y);
+    spritebatch->addChild(sun);
+    spriteAction("sun", sun, 2);
+    
+    //      ground
     auto ground = Sprite::create("res/ground.png");
     auto groundBody = PhysicsBody::createBox(Size(2048.0f, 200.0f), PhysicsMaterial(1.0f, 0.0f, 1.0f));
     groundBody->setDynamic(false);
@@ -104,16 +147,15 @@ bool MainScene::init() {
     ground->setPhysicsBody(groundBody);
     game_layer->addChild(ground, 1);
     
-    createSnail();
     
-    // Camera
+    //  CAMERA
     float playfield_width = _screenSize.width * 2.0; // make the x-boundry 2 times the screen width
     float playfield_height = _screenSize.height * 2.0; // make the y-boundry 2 times the screen height
     game_layer->runAction(Follow::create( _snail->getSprite(),
                                    Rect( _center.x - playfield_width/2, _center.y - playfield_height/4 ,
                                         playfield_width, playfield_height) ) );
     
-    
+    //  LISTNER
     auto listener = EventListenerTouchAllAtOnce::create();
     listener->onTouchesBegan = CC_CALLBACK_2(MainScene::onTouchesBegan, this);
     listener->onTouchesMoved = CC_CALLBACK_2(MainScene::onTouchesMoved, this);
@@ -124,6 +166,8 @@ bool MainScene::init() {
     contactListener->onContactBegin = CC_CALLBACK_1(MainScene::onContactBegin, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
    
+    
+    
     this->scheduleUpdate();
     
     return true;
@@ -172,6 +216,7 @@ void MainScene::update(float dt) {
         _snail->base = true;
     }
 }
+
 
 bool MainScene::onContactBegin(PhysicsContact& contact) {
     auto nodeA = contact.getShapeA()->getBody()->getNode();
