@@ -127,15 +127,23 @@ bool MainScene::init() {
     game_layer->addComponent(wallBody1);
     game_layer->addComponent(wallBody2);
     
-    //      background
+    //      space background
     auto space = Sprite::create("res/space_bg.png");
     space->setPosition(Vec2(visibleSize.width/2  + origin.x, 0));
     game_layer->addChild(space);
     
+    //      sun
     auto sun = Sprite::createWithSpriteFrameName("sun_1.png");
     sun->setPosition(_center.x, _center.y);
     spritebatch->addChild(sun);
     spriteAction("sun", sun, 2);
+   
+    //      earth
+    auto earth = Sprite::createWithSpriteFrameName("earth_1.png");
+    earth->setPosition(_center.x + 500, _center.y);
+    earth->setScale(0.5);
+    spritebatch->addChild(earth);
+    spriteAction("earth", earth, 3);
     
     //      ground
     auto ground = Sprite::create("res/ground.png");
