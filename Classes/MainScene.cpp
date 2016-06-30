@@ -57,7 +57,18 @@ void spriteAction(char* name, Node* _sun, int sp_count) {
     _sun->runAction(RepeatForever::create(Animate::create(animation)));
 }
 
+void MainScene::sun_way(Node* sun) {
+    
+    auto moveTo0 = MoveTo::create(0.5, Vec2(-sun->getContentSize().width * 2.0,
+                                            -sun->getContentSize().height));
+    auto moveTo1 = MoveTo::create(10, Vec2(_center.x * 2.0, _center.y + 100));
+    auto moveTo2 = MoveTo::create(10, Vec2(_screenSize.width * 2.0 + sun->getContentSize().width,
+                                          -sun->getContentSize().height));
+    auto seq = Sequence::create(moveTo0, moveTo1, moveTo2, nullptr);
+    sun->runAction(RepeatForever::create(seq));
 
+    spriteAction("sun", sun, 2);
+}
 
 
 bool MainScene::init() {
@@ -134,9 +145,10 @@ bool MainScene::init() {
     
     //      sun
     auto sun = Sprite::createWithSpriteFrameName("sun_1.png");
-    sun->setPosition(_center.x, _center.y);
+    sun->setPosition(-sun->getContentSize().width * 2.0,
+                     -sun->getContentSize().height);
     spritebatch->addChild(sun);
-    spriteAction("sun", sun, 2);
+    sun_way(sun);
    
     //      earth
     auto earth = Sprite::createWithSpriteFrameName("earth_1.png");
@@ -224,7 +236,6 @@ void MainScene::update(float dt) {
         _snail->base = true;
     }
 }
-
 
 bool MainScene::onContactBegin(PhysicsContact& contact) {
     auto nodeA = contact.getShapeA()->getBody()->getNode();
