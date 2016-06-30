@@ -72,10 +72,10 @@ bool MainScene::init() {
     // walls
     auto wallBody1 = PhysicsBody::createBox(
                                             Size(32.0f, origin.y + visibleSize.height),
-                                            PhysicsMaterial(0.1f, 1.0f, 0.5f) );
+                                            PhysicsMaterial(0.0f, 0.0f, 0.0f) );
     auto wallBody2 = PhysicsBody::createBox(
                                             Size(32.0f,  origin.y + visibleSize.height*3),
-                                            PhysicsMaterial(0.1f, 1.0f, 0.5f) );
+                                            PhysicsMaterial(0.0f, 0.0f, 0.0f) );
     wallBody1->setDynamic(false);
     wallBody1->setPositionOffset(Vec2(visibleSize.width, visibleSize.height-visibleSize.height/2));
     wallBody1->setName("wall1");
