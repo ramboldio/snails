@@ -3,9 +3,9 @@
         { 
             "coordinatesFileName": "spritesheets.plist",
             "textureFileName": "spritesheets.png",
-            "width": 1388.0,
-            "height": 2062.0
+            "width": 1776.0,
+            "height": 1548.0
         }
     ],
-    "signature": "78192bfc081b1dc15486c9fee061670a9199fefa"
+    "signature": "5d596bbbf14bbfed1a314fcff403f2b2e35a7203"
 }

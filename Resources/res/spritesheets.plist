@@ -9,7 +9,7 @@
         <key>format</key>
         <integer>3</integer>
         <key>size</key>
-        <string>{1388.0,2062.0}</string>
+        <string>{1776.0,1548.0}</string>
         <key>name</key>
         <string>Untitled</string>
         <key>textureFileName</key>
@@ -50,7 +50,7 @@
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{2.0,516.0},{512.0,512.0}}</string>
+            <string>{{516.0,2.0},{512.0,512.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
@@ -70,7 +70,7 @@
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{370.0,1030.0},{512.0,512.0}}</string>
+            <string>{{1030.0,2.0},{512.0,512.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
@@ -90,7 +90,7 @@
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{516.0,776.0},{228.0,228.0}}</string>
+            <string>{{1544.0,2.0},{228.0,228.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
@@ -102,15 +102,15 @@
             <key>spriteSize</key>
             <string>{366.0,514.0}</string>
             <key>spriteOffset</key>
-            <string>{0.0,-0.0}</string>
+            <string>{0.0,-127.0}</string>
             <key>spriteSourceSize</key>
-            <string>{366.0,514.0}</string>
+            <string>{366.0,768.0}</string>
             <key>spriteSourceColorRect</key>
-            <string>{{0.0,0.0},{366.0,514.0}}</string>
+            <string>{{0.0,254.0},{366.0,514.0}}</string>
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{2.0,1030.0},{366.0,514.0}}</string>
+            <string>{{2.0,516.0},{366.0,514.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
@@ -122,15 +122,15 @@
             <key>spriteSize</key>
             <string>{354.0,514.0}</string>
             <key>spriteOffset</key>
-            <string>{0.0,-0.0}</string>
+            <string>{0.0,127.0}</string>
             <key>spriteSourceSize</key>
-            <string>{354.0,514.0}</string>
+            <string>{354.0,768.0}</string>
             <key>spriteSourceColorRect</key>
             <string>{{0.0,0.0},{354.0,514.0}}</string>
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{516.0,2.0},{354.0,514.0}}</string>
+            <string>{{370.0,516.0},{354.0,514.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
@@ -150,7 +150,7 @@
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{872.0,2.0},{512.0,512.0}}</string>
+            <string>{{726.0,516.0},{512.0,512.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
@@ -170,7 +170,7 @@
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{872.0,516.0},{512.0,512.0}}</string>
+            <string>{{1240.0,516.0},{512.0,512.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
@@ -190,7 +190,7 @@
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{869.0,1544.0},{430.0,512.0}}</string>
+            <string>{{2.0,1032.0},{430.0,512.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
@@ -210,7 +210,7 @@
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{370.0,1544.0},{497.0,512.0}}</string>
+            <string>{{434.0,1032.0},{497.0,512.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
@@ -220,17 +220,17 @@
         <key>tree_3.png</key>
         <dict>
             <key>spriteSize</key>
-            <string>{252.0,256.0}</string>
+            <string>{256.0,260.0}</string>
             <key>spriteOffset</key>
             <string>{0.0,-0.0}</string>
             <key>spriteSourceSize</key>
-            <string>{252.0,256.0}</string>
+            <string>{256.0,260.0}</string>
             <key>spriteSourceColorRect</key>
-            <string>{{0.0,0.0},{252.0,256.0}}</string>
+            <string>{{0.0,0.0},{256.0,260.0}}</string>
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{516.0,518.0},{252.0,256.0}}</string>
+            <string>{{933.0,1032.0},{256.0,260.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
@@ -250,7 +250,7 @@
             <key>spriteTrimmed</key>
             <true/>
             <key>textureRect</key>
-            <string>{{2.0,1546.0},{275.0,512.0}}</string>
+            <string>{{1191.0,1032.0},{275.0,512.0}}</string>
             <key>textureRotated</key>
             <false/>
             <key>aliases</key>
