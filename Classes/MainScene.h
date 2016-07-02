@@ -4,6 +4,7 @@
 #define __MAIN_SCENE_H__
 
 #define TRANSITION_TIME 0.5
+#define JUMPS_COUNT 10
 
 #include "cocos2d.h"
 #include "Snail.h"
@@ -19,6 +20,7 @@ class MainScene : public Layer
     Vec2 _force;
     Vec2 _tap;
     int score = 0;
+    int jumps = JUMPS_COUNT;
     Snail* _snail;
     
 public:

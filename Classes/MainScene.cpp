@@ -6,7 +6,7 @@
 USING_NS_CC;
 using namespace std;
 
-Label* label_score;
+Label* label_score, * label_jumps;
 
 Node* game_layer;
 Node* menu_layer;
@@ -35,10 +35,17 @@ Scene* MainScene::createScene() {
 }
 
 
-char* set_score_label(int _score){
-    char text[256];
-    sprintf(text,"Score: %d",_score);
-    return text;
+char* set_label(int flag, int _score){
+    char text[50];
+    if (flag == 1) {
+        sprintf(text, "Score: %d", _score);
+        return text;
+    }
+    if (flag == 2) {
+        sprintf(text, "Jumps: %d", _score);
+        return text;
+    }
+    return " ";
 }
 
 Vector<SpriteFrame*> getAnimation(const char *format, int count) {
@@ -103,10 +110,16 @@ bool MainScene::init() {
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
     menu_layer->addChild(closeItem, 3); */
     
-    label_score = Label::createWithTTF(set_score_label(score), "fonts/Marker Felt.ttf", 32);
-    label_score->setPosition(Vec2(label_score->getContentSize().width, visibleSize.height - label_score->getContentSize().height));
+    label_score = Label::createWithTTF(set_label(1, score), "fonts/Marker Felt.ttf", 32);
+    label_score->setPosition(Vec2(label_score->getContentSize().width,
+                                  visibleSize.height - label_score->getContentSize().height));
+    
+    label_jumps = Label::createWithTTF(set_label(2, jumps), "fonts/Marker Felt.ttf", 32);
+    label_jumps->setPosition(Vec2(label_score->getContentSize().width,
+                                 label_score->getPosition().y - label_jumps->getContentSize().height));
+    
     menu_layer->addChild(label_score, 3);
-
+    menu_layer->addChild(label_jumps, 3);
     
     
     //  BACKGROUND OBJECTS
@@ -244,7 +257,8 @@ void MainScene::createSnail() {
 
 void MainScene::update(float dt) {
     
-    label_score->setString(set_score_label(score));
+    label_score->setString(set_label(1, score));
+    label_jumps->setString(set_label(2, jumps));
     
     if (not _snail->air_state and _snail->getSprite()->getPhysicsBody()->getVelocity().y < 0) {
         _snail->getSprite()->setTexture("res/snail_lands.png");
@@ -328,21 +342,28 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
 }
 
 void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event) {
-    for (auto touch : touches) {
-        if (touch != nullptr) {
-            Vec2 tap = touch->getLocation();
-            _force = Vec2( (tap.x - _delta.x)*10.0f, 350 *10.0f + (tap.y - _delta.y));
-            if (_force.x < 0) {
-                _snail->getSprite()->setScale(0.1 * -1, 0.1);
-            } else _snail->getSprite()->setScale(0.1, 0.1);
+    
+    if(jumps != 0) {
+        for (auto touch : touches) {
+            if (touch != nullptr) {
+                Vec2 tap = touch->getLocation();
+                _force = Vec2( (tap.x - _delta.x)*10.0f, 350 *10.0f + (tap.y - _delta.y));
+                if (_force.x < 0) {
+                    _snail->getSprite()->setScale(0.1 * -1, 0.1);
+                } else _snail->getSprite()->setScale(0.1, 0.1);
 
-            _snail->getSprite()->setTexture("res/snail_fly.png");
-            _snail->base = false;
-            _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
-            
-            _snail->getSprite()->getPhysicsBody()->applyImpulse(_force);
-            _snail->ground_state = false;
+                jumps -= 1;
+                _snail->getSprite()->setTexture("res/snail_fly.png");
+                _snail->base = false;
+                _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
+        
+                _snail->getSprite()->getPhysicsBody()->applyImpulse(_force);
+                _snail->ground_state = false;
+            }
         }
+    } else {
+        _snail->getSprite()->setTexture("res/snail_base.png");
+        _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
     }
 }
 
