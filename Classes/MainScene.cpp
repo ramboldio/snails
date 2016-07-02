@@ -16,8 +16,8 @@ MainScene::~MainScene(){}
 
 Node* station;
 Node* tree;
-bool tree_state = true;
 
+bool tree_state = true;
 
 
 Scene* MainScene::createScene() {
@@ -25,9 +25,9 @@ Scene* MainScene::createScene() {
     auto main_scene = Scene::createWithPhysics();
     auto layer = MainScene::create();
     
-    /*
+    
         main_scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-    */
+    
     main_scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f));
     main_scene->addChild(layer, 0, 0);
     
@@ -232,7 +232,7 @@ PhysicsBody *createSnailBody(Sprite *snail_sprite){
     PhysicsBody *snail_body = PhysicsBody::createBox(
                                                     Size(snail_sprite->getContentSize().width,
                                                     snail_sprite->getContentSize().height),
-                                                    PhysicsMaterial(0.5f, 0.1f, 1.0f));
+                                                    PhysicsMaterial(0.5f, 0.1f, 0.0f));
     snail_body->setMass(10.0f);
     snail_body->setContactTestBitmask(0xFFFFFFFFF);
     snail_body->setCategoryBitmask(0x02);    // 0011
@@ -254,6 +254,18 @@ void MainScene::createSnail() {
     game_layer->addChild(_snail->getSprite(), 2);
 }
 
+void changeTreePhBody() {
+    Vec2 old_pos = tree->getPosition();
+    auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
+                                                tree->getContentSize().height),
+                                           PhysicsMaterial(1.0f, 0.0f, 0.0f));
+    treeBody->setContactTestBitmask(0xFFFFFFFFF);
+    treeBody->setDynamic(false);
+    tree->setPhysicsBody(treeBody);
+    tree->setPosition(old_pos);
+}
+
+
 
 void MainScene::update(float dt) {
     
@@ -272,7 +284,12 @@ void MainScene::update(float dt) {
         _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
         _snail->base = true;
     }
+    
+    if (not tree_state) changeTreePhBody();
 }
+
+
+
 
 bool MainScene::onContactBegin(PhysicsContact& contact) {
     auto nodeA = contact.getShapeA()->getBody()->getNode();
@@ -290,6 +307,7 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             tree_state = false;
             spriteAction("tree", nodeB, 4, false);
         }
+   
     }
     
     return true;
