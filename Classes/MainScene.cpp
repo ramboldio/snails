@@ -298,14 +298,14 @@ void MainScene::sun_way(Node* sun) {
 
 void MainScene::station_way(Node* station) {
     
-    auto moveTo1 = MoveTo::create(2, Vec2(station->getPosition().x, station->getPosition().y + 50));
+    auto moveTo1 = MoveTo::create(0.5, Vec2(station->getPosition().x, station->getPosition().y + 50));
     auto move_ease_bounceInOut1 = EaseInOut::create(moveTo1->clone(), 0.2);
-    auto moveTo2 = MoveTo::create(2, Vec2(station->getPosition().x, station->getPosition().y - 50));
+    auto moveTo2 = MoveTo::create(0.5, Vec2(station->getPosition().x, station->getPosition().y - 50));
     auto move_ease_bounceInOut2 = EaseInOut::create(moveTo2->clone(), 0.2);
     auto seq = Sequence::createWithTwoActions(move_ease_bounceInOut1, move_ease_bounceInOut2);
     
     station->runAction(RepeatForever::create(seq));
-    spriteAction("station", station, 2, true);
+    spriteAction("station", station, 5, true);
 }
 
 
