@@ -23,7 +23,7 @@ bool StartScene::init() {
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
     auto backgroundSprite = Sprite::create("res/background_start.png");
-    backgroundSprite->setScale(1.5);
+    backgroundSprite->setScale(0.35);
     backgroundSprite->setPosition( Point( visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y ) );
     
     this->addChild( backgroundSprite );
@@ -31,7 +31,7 @@ bool StartScene::init() {
     
     
     auto start_btn = MenuItemImage::create("res/button.png", "res/button_clicked.png", CC_CALLBACK_1(StartScene::goToMainScene, this) );
-    start_btn->setPosition(Vec2(visibleSize.width/1.5, visibleSize.height + origin.y  - start_btn->getContentSize().height));
+    start_btn->setPosition(Vec2(visibleSize.width/1.5, visibleSize.height/1.1 + origin.y  - start_btn->getContentSize().height));
     
     auto menu = Menu::create(start_btn, NULL);
     menu->setPosition(Point::ZERO);
