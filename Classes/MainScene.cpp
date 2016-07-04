@@ -2,6 +2,8 @@
 #include "StartScene.h"
 #include "SimpleAudioEngine.h"
 #include <cstring>
+#include "GameOverScene.h"
+
 #define COCOS2D_DEBUG 1
 USING_NS_CC;
 using namespace std;
@@ -59,12 +61,12 @@ Vector<SpriteFrame*> getAnimation(const char *format, int count) {
     return animFrames;
 }
 
-void spriteAction(char* name, Node* _node, int sp_count, bool repeat_flag) {
+void spriteAction(char* name, Node* _node, int sp_count, bool repeat_flag, float speed) {
     char sp_way[50];
     strcpy(sp_way, name);
     strcat(sp_way, "_%d.png");
     auto frames = getAnimation(sp_way, sp_count);
-    auto animation = Animation::createWithSpriteFrames(frames, 1.0f/8);
+    auto animation = Animation::createWithSpriteFrames(frames, speed);
     if (repeat_flag) _node->runAction(RepeatForever::create(Animate::create(animation)));
     else _node->runAction(Animate::create(animation));
 }
@@ -142,7 +144,7 @@ bool MainScene::init() {
     earth->setPosition(_center.x + 500, _center.y);
     earth->setScale(0.5);
     spritebatch->addChild(earth);
-    spriteAction("earth", earth, 3, true);
+    spriteAction("earth", earth, 3, true, 2.0f/8);
     
     
     
@@ -295,6 +297,11 @@ void MainScene::update(float dt) {
     }
     
     if (not tree_state) changeTreePhBody();
+    
+    if (jumps == 0) {
+        auto scene = GameOverScene::createScene();
+        Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
+    }
 }
 
 
@@ -309,10 +316,10 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
         
         if (nodeA->getName() == "tree" and nodeB->getName() == "snail" and tree_state) {
             tree_state = false;
-            spriteAction("tree", nodeA, 4, false);
+            spriteAction("tree", nodeA, 4, false, 0.1);
         } else if (nodeB->getName() == "tree" and nodeA->getName() == "snail" and tree_state) {
             tree_state = false;
-            spriteAction("tree", nodeB, 4, false);
+            spriteAction("tree", nodeB, 4, false, 0.1);
         }
    
     }
@@ -331,7 +338,7 @@ void MainScene::sun_way(Node* sun) {
     auto seq = Sequence::create(moveTo0, moveTo1, moveTo2, nullptr);
     sun->runAction(RepeatForever::create(seq));
     
-    spriteAction("sun", sun, 2, true);
+    spriteAction("sun", sun, 2, true, 2.0f/8);
 }
 
 
@@ -344,7 +351,7 @@ void MainScene::station_way(Node* station) {
     auto seq = Sequence::createWithTwoActions(move_ease_bounceInOut1, move_ease_bounceInOut2);
     
     station->runAction(RepeatForever::create(seq));
-    spriteAction("station", station, 5, true);
+    spriteAction("station", station, 5, true, 0.3f);
 }
 
 
@@ -428,6 +435,12 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
             }
         }
     }
+}
+
+
+void MainScene::goToGameOverScene(Ref *sender) {
+    auto scene = GameOverScene::createScene();
+    Director::getInstance()->replaceScene( TransitionFade::create(TRANSITION_TIME, scene) );
 }
 
 
