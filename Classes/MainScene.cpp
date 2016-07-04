@@ -2,6 +2,8 @@
 #include "StartScene.h"
 #include "SimpleAudioEngine.h"
 #include <cstring>
+#include "GameOverScene.h"
+
 #define COCOS2D_DEBUG 1
 USING_NS_CC;
 using namespace std;
@@ -286,6 +288,11 @@ void MainScene::update(float dt) {
     }
     
     if (not tree_state) changeTreePhBody();
+    
+    if (jumps == 0) {
+        auto scene = GameOverScene::createScene();
+        Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
+    }
 }
 
 
@@ -383,6 +390,12 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
         _snail->getSprite()->setTexture("res/snail_base.png");
         _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
     }
+}
+
+
+void MainScene::goToGameOverScene(Ref *sender) {
+    auto scene = GameOverScene::createScene();
+    Director::getInstance()->replaceScene( TransitionFade::create(TRANSITION_TIME, scene) );
 }
 
 

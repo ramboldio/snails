@@ -1,18 +1,18 @@
-#ifndef __START_SCENE_H__
-#define __START_SCENE_H__
+#ifndef GameOverScene_h
+#define GameOverScene_h
 
 #include "cocos2d.h"
 
-class StartScene : public cocos2d::Layer
+class GameOverScene : public cocos2d::Layer
 {
 public:
     static cocos2d::Scene* createScene();
     virtual bool init();
     
-    CREATE_FUNC(StartScene);
+    CREATE_FUNC(GameOverScene);
     
 private:
     void goToMainScene(Ref *sender);
 };
 
-#endif // __START_SCENE_H__
+#endif /* GameOverScene_h */
