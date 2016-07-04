@@ -23,16 +23,17 @@ bool GameOverScene::init() {
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
-    auto backgroundSprite = Sprite::create("res/background_start.png");
-    backgroundSprite->setScale(1.5);
+    auto backgroundSprite = Sprite::create("res/gameover.png");
+    backgroundSprite->setScale(0.32);
     backgroundSprite->setPosition( Point( visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y ) );
     
     this->addChild( backgroundSprite );
     
     
     
-    auto start_btn = MenuItemImage::create("res/button.png", "res/button_clicked.png", CC_CALLBACK_1(GameOverScene::goToMainScene, this) );
-    start_btn->setPosition(Vec2(visibleSize.width/1.5, visibleSize.height + origin.y  - start_btn->getContentSize().height));
+    auto start_btn = MenuItemImage::create("res/tryagain.png", "res/tryagain.png", CC_CALLBACK_1(GameOverScene::goToMainScene, this) );
+    start_btn->setScale(0.3);
+    start_btn->setPosition(Vec2(visibleSize.width/2.7, visibleSize.height/1.2 + origin.y  - start_btn->getContentSize().height));
     
     auto menu = Menu::create(start_btn, NULL);
     menu->setPosition(Point::ZERO);
@@ -40,10 +41,6 @@ bool GameOverScene::init() {
     this->addChild(menu);
 
     
-    auto gameover_label = Label::createWithTTF("Game over!", "fonts/Marker Felt.ttf", 32);
-    gameover_label->setColor(Color3B(0, 0, 0));
-    gameover_label->setPosition(Vec2(visibleSize.width/2  + origin.x, visibleSize.height/2 + origin.y));
-    this->addChild(gameover_label, 1);
     
     
     return true;
