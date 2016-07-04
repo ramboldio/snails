@@ -127,6 +127,7 @@ set(GAME_SRC
         Classes/MainScene.cpp
         Classes/StartScene.cpp
         Classes/Snail.cpp
+        Classes/GameOverScene.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -135,6 +136,7 @@ set(GAME_HEADERS
         Classes/MainScene.h
         Classes/StartScene.h
         Classes/Snail.h
+        Classes/GameOverScene.h
   ${PLATFORM_SPECIFIC_HEADERS}
 )
 
