@@ -5,6 +5,9 @@
 
 #define TRANSITION_TIME 0.5
 #define JUMPS_COUNT 10
+#define FORCE_MULTIPLIER 11
+#define ANTI_GRAVITY 1.8
+
 
 #include "cocos2d.h"
 #include "Snail.h"
@@ -18,6 +21,8 @@ class MainScene : public Layer
     Vec2 _center;
     Vec2 _delta;
     Vec2 _force;
+    Vec2 _touch_start;
+    Vec2 _touch_stop;
     Vec2 _tap;
     int score = 0;
     int jumps = JUMPS_COUNT;
