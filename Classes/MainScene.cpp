@@ -281,9 +281,6 @@ void changeTreePhBody() {
     tree->setPosition(old_pos);
 }
 
-void MainScene::gameOver() {
-    // TODO show game Over screen
-}
 
 void MainScene::update(float dt) {
     
