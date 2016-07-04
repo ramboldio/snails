@@ -50,7 +50,7 @@ char* set_label(int flag, int _score){
     return " ";
 }
 
-Vector<SpriteFrame*> getAnimation(const char *format, int count) {
+Vector<SpriteFrame*> getAnimation(const char *format, int count, int bothWay_flag) {
     auto spritecache = SpriteFrameCache::getInstance();
     Vector<SpriteFrame*> animFrames;
     char str[100];
@@ -58,14 +58,20 @@ Vector<SpriteFrame*> getAnimation(const char *format, int count) {
         sprintf(str, format, i);
         animFrames.pushBack(spritecache->getSpriteFrameByName(str));
     }
+    if(bothWay_flag){
+        for(int i = count; i >= 1; i--) {
+            sprintf(str, format, i);
+            animFrames.pushBack(spritecache->getSpriteFrameByName(str));
+        }
+    }
     return animFrames;
 }
 
-void spriteAction(char* name, Node* _node, int sp_count, bool repeat_flag, float speed) {
+void spriteAction(char* name, Node* _node, int sp_count, bool repeat_flag, float speed, int bothWay_Flag) {
     char sp_way[50];
     strcpy(sp_way, name);
     strcat(sp_way, "_%d.png");
-    auto frames = getAnimation(sp_way, sp_count);
+    auto frames = getAnimation(sp_way, sp_count, bothWay_Flag);
     auto animation = Animation::createWithSpriteFrames(frames, speed);
     if (repeat_flag) _node->runAction(RepeatForever::create(Animate::create(animation)));
     else _node->runAction(Animate::create(animation));
@@ -143,7 +149,7 @@ bool MainScene::init() {
     earth->setPosition(_center.x + 500, _center.y);
     earth->setScale(0.5);
     spritebatch->addChild(earth);
-    spriteAction("earth", earth, 3, true, 2.0f/8);
+    spriteAction("earth", earth, 3, true, 2.0f/8, 0);
     
     
     
@@ -168,13 +174,14 @@ bool MainScene::init() {
     station = Sprite::createWithSpriteFrameName("station_1.png");
     station->setScale(0.5);
     auto stationBody = PhysicsBody::createBox(Size(station->getContentSize().width,
-                                                   station->getContentSize().height),
+                                                   station->getContentSize().height/6),
                                               PhysicsMaterial(1.0f, 0.0f, 1.0f));
     stationBody->setDynamic(false);
     stationBody->setGravityEnable(false);
     station->setPhysicsBody(stationBody);
-    station->setPosition(1440.74, _center.y + 200);
+    station->setPosition(1440.74, _center.y);
     spritebatch->addChild(station);
+    station->getPhysicsBody()->setPositionOffset(Vec2(0.0f,-station->getContentSize().height/4+15));//0.0f, -station->getContentSize().height/3
     station_way(station);
     
     
@@ -309,10 +316,10 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
         
         if (nodeA->getName() == "tree" and nodeB->getName() == "snail" and tree_state) {
             tree_state = false;
-            spriteAction("tree", nodeA, 4, false, 0.1);
+            spriteAction("tree", nodeA, 4, false, 0.1, 0);
         } else if (nodeB->getName() == "tree" and nodeA->getName() == "snail" and tree_state) {
             tree_state = false;
-            spriteAction("tree", nodeB, 4, false, 0.1);
+            spriteAction("tree", nodeB, 4, false, 0.1, 0);
         }
    
     }
@@ -331,7 +338,7 @@ void MainScene::sun_way(Node* sun) {
     auto seq = Sequence::create(moveTo0, moveTo1, moveTo2, nullptr);
     sun->runAction(RepeatForever::create(seq));
     
-    spriteAction("sun", sun, 2, true, 2.0f/8);
+    spriteAction("sun", sun, 2, true, 2.0f/8, 0);
 }
 
 
@@ -344,7 +351,7 @@ void MainScene::station_way(Node* station) {
     auto seq = Sequence::createWithTwoActions(move_ease_bounceInOut1, move_ease_bounceInOut2);
     
     station->runAction(RepeatForever::create(seq));
-    spriteAction("station", station, 5, true, 0.3f);
+    spriteAction("station", station, 5, true, 0.3f, 1);
 }
 
 
