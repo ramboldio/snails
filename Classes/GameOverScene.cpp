@@ -2,6 +2,7 @@
 #include "MainScene.h"
 #include "ui/CocosGUI.h"
 
+#define TRANSITION_TIME 0.5
 USING_NS_CC;
 
 Scene* GameOverScene::createScene()
@@ -39,8 +40,6 @@ bool GameOverScene::init() {
     menu->setPosition(Point::ZERO);
     
     this->addChild(menu);
-
-    
     
     
     return true;
@@ -48,6 +47,6 @@ bool GameOverScene::init() {
 
 void GameOverScene::goToMainScene(Ref *sender) {
     auto scene = MainScene::createScene();
-    
+    this->getScene()->cleanup();
     Director::getInstance()->replaceScene( TransitionFade::create(TRANSITION_TIME, scene) );
 }

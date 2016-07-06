@@ -5,7 +5,9 @@
 #include "GameOverScene.h"
 
 #define COCOS2D_DEBUG 1
+#define TRANSITION_TIME 0.5
 USING_NS_CC;
+
 using namespace std;
 
 Label* label_score, * label_jumps;
@@ -81,6 +83,8 @@ void spriteAction(char* name, Node* _node, int sp_count, bool repeat_flag, float
 
 bool MainScene::init() {
     
+    score = 0;
+    
     if ( !Layer::init() ) {
         return false;
     }
@@ -135,7 +139,7 @@ bool MainScene::init() {
     //      space background
     auto space = Sprite::create("res/space_bg.png");
     space->setScale(1.2);
-    space->setPosition(Vec2(visibleSize.width/2  + origin.x, 0));
+    space->setPosition(Vec2(visibleSize.width/2  + origin.x, 200));
     game_layer->addChild(space);
     
     //      sun
@@ -169,6 +173,7 @@ bool MainScene::init() {
     tree->setPhysicsBody(treeBody);
     tree->setName("tree");
     tree->setPosition(_center.x - 200, 250);
+    tree_state = true;
     spritebatch->addChild(tree);
 
     //      station
@@ -321,9 +326,11 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
         if (nodeA->getName() == "tree" and nodeB->getName() == "snail" and tree_state) {
             tree_state = false;
             spriteAction("tree", nodeA, 4, false, 0.1, 0);
+            score += 1;
         } else if (nodeB->getName() == "tree" and nodeA->getName() == "snail" and tree_state) {
             tree_state = false;
             spriteAction("tree", nodeB, 4, false, 0.1, 0);
+            score += 1;
         }
    
     }
@@ -443,6 +450,7 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
 
 
 void MainScene::goToGameOverScene(Ref *sender) {
+    this->cleanup();
     auto scene = GameOverScene::createScene();
     Director::getInstance()->replaceScene( TransitionFade::create(TRANSITION_TIME, scene) );
 }

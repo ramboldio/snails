@@ -2,6 +2,8 @@
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
 
+#define TRANSITION_TIME 0.5
+
 USING_NS_CC;
 
 Scene* StartScene::createScene() {
@@ -43,6 +45,7 @@ bool StartScene::init() {
 }
 
 void StartScene::goToMainScene(Ref *sender) {
+    this->cleanup();
     auto scene = MainScene::createScene();
     Director::getInstance()->replaceScene( TransitionFade::create(TRANSITION_TIME, scene) );
 }
