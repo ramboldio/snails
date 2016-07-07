@@ -3,6 +3,7 @@
 #include "SimpleAudioEngine.h"
 #include <cstring>
 #include "GameOverScene.h"
+#include "WinningScene.h"
 
 #define COCOS2D_DEBUG 1
 #define TRANSITION_TIME 0.5
@@ -20,6 +21,7 @@ MainScene::~MainScene(){}
 
 Node* station;
 Node* tree;
+Node* stone;
 
 bool tree_state = true;
 
@@ -316,6 +318,11 @@ void MainScene::update(float dt) {
         auto scene = GameOverScene::createScene();
         Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
     }
+    
+    if (_snail->getSprite()->getPosition().x>1430&&_snail->getSprite()->getPosition().y>300) {
+        auto scene = WinningScene::createScene();
+        Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
+    }
 }
 
 
@@ -374,7 +381,7 @@ void MainScene::station_way(Node* station) {
 
 void MainScene::onTouchesBegan(const std::vector<Touch*> &touches, Event* event) {
     for (auto touch : touches) {
-        if (touch != nullptr) {
+        if (touch != nullptr&&_snail->ground_state) {
             log("Touched: %f, %f",touch->getLocation().x, touch->getLocation().y);
             //TODO add camera Movement to Touch
             log("GameLayerPos: %f, %f",game_layer->getPosition().x, game_layer->getPosition().y);
@@ -393,12 +400,22 @@ void MainScene::onTouchesBegan(const std::vector<Touch*> &touches, Event* event)
 
 void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event){
     for (auto touch : touches) {
-        if (touch != nullptr) {
+        if (touch != nullptr&&_snail->ground_state) {
             /*_touch_stop = touch->getLocation();
             //_snail->getSprite()->setTexture("res/snail_touch.png");
             //_snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));*/
             
             //Only Save Point if Valid Start Point
+            
+            //Detect if first Move Point
+            if(_touch_stop==Vec2(-1,-1)){       //TODO if delta high enough
+                _snail->getSprite()->setTexture("res/norm/snail_touch.png");   //Activate Later -> Fix Bounding Box Problem
+                log("Sprite Changed!");
+                //TODO add & update arrow for force
+                
+            }else{
+                //TODO arrow dashed -> not enough power to fly
+            }
             
             //log("Move Point Logged");
             if(_touch_start!=Vec2(-1,-1)){  //TODO
@@ -443,15 +460,7 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
                 //DeltaOne Max: 150 - 180
                 //DeltaOne Min: 30 - 50
                 
-                //Detect if first Move Point
-                if(_touch_stop==Vec2(-1,-1)){       //TODO if delta high enough
-                    _snail->getSprite()->setTexture("res/norm/snail_touch.png");   //Activate Later -> Fix Bounding Box Problem
-                    log("Sprite Changed!");
-                    //TODO add & update arrow for force
-                    
-                }else{
-                    //TODO arrow dashed -> not enough power to fly
-                }
+                
             }
         }
     }
@@ -459,12 +468,7 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
 
 void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event) {
         for (auto touch : touches) {
-            if(_touch_start!=_touch_stop && _touch_start!=Vec2(-1,-1) && _touch_stop!=Vec2(-1,-1)){
-                //log("Computing Force and Applying soon");
-                //For testing
-                //_delta=Vec2(200,150);
-                //Vec2 helpingForce= Vec2(1000,2000);
-                //_delta.scale(helpingForce);
+            if(_touch_start!=_touch_stop && _touch_start!=Vec2(-1,-1) && _touch_stop!=Vec2(-1,-1)&&_snail->ground_state){
                 _snail->getSprite()->getPhysicsBody()->applyForce(_force);
                 
                 jumps -= 1;
@@ -472,6 +476,8 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
                 _snail->base = false;
                 _snail->ground_state = false;
                 glibberFlag=(glibberFlag)?(0):(0);
+                _touch_start = Vec2(-1,-1);
+                _touch_stop = Vec2(-1,-1);
 
             }
         }
