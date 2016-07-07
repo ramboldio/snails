@@ -20,6 +20,7 @@ class MainScene : public Layer
     Size _screenSize;
     Vec2 _center;
     Vec2 _delta;
+    float deltaOne;
     Vec2 _force;
     Vec2 _touch_start;
     Vec2 _touch_stop;
