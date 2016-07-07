@@ -194,7 +194,7 @@ bool MainScene::init() {
 
     //      ground
     auto ground = Sprite::create("res/ground.png");
-    auto groundBody = PhysicsBody::createBox(Size(ground->getContentSize().width, 200.0f), PhysicsMaterial(1.0f, 0.0f, 0.9f));
+    auto groundBody = PhysicsBody::createBox(Size(ground->getContentSize().width, 180.0f), PhysicsMaterial(1.0f, 0.0f, 0.9f));
     groundBody->setDynamic(false);
     groundBody->setTag(0);
     groundBody->setContactTestBitmask(0xFFFFFFFFF);
@@ -269,7 +269,7 @@ void MainScene::createSnail() {
     
     _snail = new Snail();
     _snail->getSprite()->setTexture("res/norm/snail_base.png");
-    _snail->getSprite()->setPosition(Vec2(_center.x, 156.6f)); // log("%f ", _snail->getSprite()->getPosition().y);
+    _snail->getSprite()->setPosition(Vec2(_center.x-_screenSize.width, 156.6f)); // log("%f ", _snail->getSprite()->getPosition().y);
     _snail->getSprite()->setScale(0.1, 0.1);
     _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
     _snail->getSprite()->setName("snail");
@@ -392,7 +392,7 @@ void MainScene::onTouchesBegan(const std::vector<Touch*> &touches, Event* event)
                 _touch_stop = touch->getLocation();
             }*/
             
-            float scaleFactorSnail = 0.1;
+            //float scaleFactorSnail = 0.1;
             //Rect rect = Rect(_snail->getPositionX()-_snail->getContentSize().width*scaleFactorSnail/2, _snail->getPositionY()- _snail->getContentSize().height*scaleFactorSnail/2, _snail->getContentSize().width*scaleFactorSnail, _snail->getContentSize().height*scaleFactorSnail);
             log("Touched: %f, %f",touch->getLocation().x, touch->getLocation().y);
             //TODO add camera Movement to Touch
