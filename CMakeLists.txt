@@ -125,20 +125,22 @@ endif( WIN32 )
 set(GAME_SRC
         Classes/AppDelegate.cpp
         Classes/MainScene.cpp
-        Classes/StartScene.cpp
-        Classes/Snail.cpp
-        Classes/GameOverScene.cpp
+        Classes/scenes/StartScene.cpp
+        Classes/model/Snail.cpp
+        Classes/scenes/GameOverScene.cpp
+        Classes/scenes/WinningScene.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
 set(GAME_HEADERS
         Classes/AppDelegate.h
         Classes/MainScene.h
-        Classes/StartScene.h
-        Classes/Snail.h
-        Classes/GameOverScene.h
+        Classes/scenes/StartScene.h
+        Classes/model/Snail.h
+        Classes/scenes/GameOverScene.h
+        Classes/scenes/WinningScene.h
   ${PLATFORM_SPECIFIC_HEADERS}
-)
+        Classes/helpers/ForceHandles.cpp Classes/helpers/ForceHandles.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

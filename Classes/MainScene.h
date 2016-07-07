@@ -5,16 +5,17 @@
 
 #define TRANSITION_TIME 0.5
 #define JUMPS_COUNT 10
-#define FORCE_MULTIPLIER 11
-#define ANTI_GRAVITY 1.8
 #define HELPING_FORCE Vec2(1000,2000)
+#define CUSTOM_GRAVITY Vec2(0.0f, -350.0f)
 
-
+#include "helpers/ForceHandles.h"
 #include "cocos2d.h"
-#include "Snail.h"
+#include "model/Snail.h"
 
 using namespace cocos2d;
 
+// forward define
+class ForceHandles;
 
 class MainScene : public Layer
 {
@@ -26,11 +27,13 @@ class MainScene : public Layer
     Vec2 _touch_start;
     Vec2 _touch_stop;
     Vec2 _tap;
+    Vec2 _gravity = CUSTOM_GRAVITY;
     int score = 0;
     int jumps = JUMPS_COUNT;
     Snail* _snail;
+    ForceHandles* _handles;
     int glibberFlag;
-    
+
 public:
     MainScene();
     virtual ~MainScene();
@@ -44,12 +47,13 @@ public:
     void station_way(Node* station);
     void createSnail();
     void goToGameOverScene(Ref *sender);
+
     void onTouchesBegan(const std::vector<Touch*> &touches, cocos2d::Event* event);
     void onTouchesMoved(const std::vector<Touch*> &touches, cocos2d::Event* event);
     void onTouchesEnded(const std::vector<Touch*> &touches, cocos2d::Event* event);
     bool onContactBegin(PhysicsContact& contact);
 
-private:
+        private:
     void update(float dt);
 };
 

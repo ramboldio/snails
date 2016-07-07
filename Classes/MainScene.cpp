@@ -1,5 +1,5 @@
 #include "MainScene.h"
-#include "StartScene.h"
+#include "scenes/StartScene.h"
 #include "SimpleAudioEngine.h"
 #include <cstring>
 #include "GameOverScene.h"
@@ -7,6 +7,7 @@
 
 #define COCOS2D_DEBUG 1
 #define TRANSITION_TIME 0.5
+
 USING_NS_CC;
 
 using namespace std;
@@ -30,13 +31,14 @@ Scene* MainScene::createScene() {
 
     auto main_scene = Scene::createWithPhysics();
     auto layer = MainScene::create();
-    
-    
-    main_scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-    
-    main_scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f));
+
+    #if COCOS2D_DEBUG
+        main_scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    #endif
+
+    main_scene->getPhysicsWorld()->setGravity(CUSTOM_GRAVITY);
     main_scene->addChild(layer, 0, 0);
-    
+
     return main_scene;
 }
 
@@ -178,8 +180,8 @@ bool MainScene::init() {
     tree->setPosition(_center.x - 200, 250);
     tree_state = true;
     spritebatch->addChild(tree);
-    
-    
+
+
 
     //      station
     station = Sprite::createWithSpriteFrameName("station_1.png");
@@ -240,7 +242,8 @@ bool MainScene::init() {
     contactListener->onContactBegin = CC_CALLBACK_1(MainScene::onContactBegin, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
    
-    
+    // HANDLES
+    _handles = new ForceHandles(this, CUSTOM_GRAVITY);
     
     this->scheduleUpdate();
     
@@ -284,7 +287,7 @@ void changeTreePhBody() {
     Vec2 old_pos = tree->getPosition();
     auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
                                                 tree->getContentSize().height),
-                                           PhysicsMaterial(1.0f, 0.0f, 0.0f));
+                                           PhysicsMaterial(1.0f, 0.6f, 0.0f));
     treeBody->setContactTestBitmask(0xFFFFFFFFF);
     treeBody->setDynamic(false);
     tree->setPhysicsBody(treeBody);
@@ -419,14 +422,14 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
             
             //log("Move Point Logged");
             if(_touch_start!=Vec2(-1,-1)){  //TODO
-                
+
                 _touch_stop = touch->getLocation();
                 _delta = _touch_start - _touch_stop;
                 //Vec2 deltaN = _delta.getNormalized();
                 //log("delta N: %f %f", deltaN.x, deltaN.y);
                 //float xyRatio = deltaN.x/deltaN.y;
                 //log("Delta: %f, %f",_delta.x, _delta.y);
-                
+
                 if(abs(_delta.x)>200)
                     _delta.x=(_delta.x<0)?(-200):(200);
                 if(abs(_delta.y)>150)
@@ -440,21 +443,21 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
                 if(glibberFlag){
                     _delta.scale(0.5);
                     log("Scaled the Glibber");
-                    //TODO alert 
+                    //TODO alert
                 }
-                
+
                 if(_delta.x<0){
                     _snail->getSprite()->setScale(-0.1, 0.1);
                 }else{
                     _snail->getSprite()->setScale(0.1, 0.1);
                 }
-                
+
                 _force = _delta;
                 _force.scale(HELPING_FORCE);
                 log("Force: (%f,%f)",_force.x,_force.y);
                 log("Delta: (%f,%f)",_delta.x,_delta.y);
-                
-                
+
+
                 //deltaOne = _touch_start.distance(_touch_stop);
                 //log("DeltaOne: %f",deltaOne);
                 //DeltaOne Max: 150 - 180
@@ -481,6 +484,9 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
 
             }
         }
+    //_touch_start = Vec2(-1,-1);
+    //}
+    _handles->clearHandles();
 }
 
 

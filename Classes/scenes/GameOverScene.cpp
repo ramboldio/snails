@@ -15,7 +15,7 @@ Scene* GameOverScene::createScene()
 }
 
 bool GameOverScene::init() {
-    //////////////////////////////
+
     // 1. super init first
     if ( !Layer::init() ) {
         return false;
