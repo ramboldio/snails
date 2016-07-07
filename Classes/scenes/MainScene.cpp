@@ -243,7 +243,7 @@ bool MainScene::init() {
     _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
    
     // HANDLES
-    _handles = new ForceHandles(this, CUSTOM_GRAVITY);
+    _handles = new ForceHandles(game_layer, CUSTOM_GRAVITY);
     
     this->scheduleUpdate();
     
