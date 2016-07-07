@@ -7,6 +7,7 @@
 #define JUMPS_COUNT 10
 #define FORCE_MULTIPLIER 11
 #define ANTI_GRAVITY 1.8
+#define HELPING_FORCE Vec2(1000,2000)
 
 
 #include "cocos2d.h"
@@ -28,6 +29,7 @@ class MainScene : public Layer
     int score = 0;
     int jumps = JUMPS_COUNT;
     Snail* _snail;
+    int glibberFlag;
     
 public:
     MainScene();
