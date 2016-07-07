@@ -425,10 +425,6 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
 
                 _touch_stop = touch->getLocation();
                 _delta = _touch_start - _touch_stop;
-                //Vec2 deltaN = _delta.getNormalized();
-                //log("delta N: %f %f", deltaN.x, deltaN.y);
-                //float xyRatio = deltaN.x/deltaN.y;
-                //log("Delta: %f, %f",_delta.x, _delta.y);
 
                 if(abs(_delta.x)>200)
                     _delta.x=(_delta.x<0)?(-200):(200);
@@ -454,38 +450,33 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
 
                 _force = _delta;
                 _force.scale(HELPING_FORCE);
-                log("Force: (%f,%f)",_force.x,_force.y);
-                log("Delta: (%f,%f)",_delta.x,_delta.y);
-
-
-                //deltaOne = _touch_start.distance(_touch_stop);
-                //log("DeltaOne: %f",deltaOne);
-                //DeltaOne Max: 150 - 180
-                //DeltaOne Min: 30 - 50
-                
-                
             }
         }
     }
 }
 
 void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event) {
-        for (auto touch : touches) {
             if(_touch_start!=_touch_stop && _touch_start!=Vec2(-1,-1) && _touch_stop!=Vec2(-1,-1)&&_snail->ground_state){
+                //TODO Bugfix Overdosed first shot
                 _snail->getSprite()->getPhysicsBody()->applyForce(_force);
                 
                 jumps -= 1;
                 _snail->getSprite()->setTexture("res/norm/snail_fly.png");
                 _snail->base = false;
                 _snail->ground_state = false;
+                if(glibberFlag){
+                    log("Deactivating glibber Flag");
+                }
                 glibberFlag=(glibberFlag)?(0):(0);
+                
+                //Test if needed
                 _touch_start = Vec2(-1,-1);
                 _touch_stop = Vec2(-1,-1);
 
+                //For Testing
+                log("Force: (%f,%f)",_force.x,_force.y);
+                log("Delta: (%f,%f)",_delta.x,_delta.y);
             }
-        }
-    //_touch_start = Vec2(-1,-1);
-    //}
 }
 
 
