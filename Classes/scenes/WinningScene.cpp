@@ -24,7 +24,7 @@ bool WinningScene::init() {
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
-    auto backgroundSprite = Sprite::create("res/gameover.png");
+    auto backgroundSprite = Sprite::create("res/gewinner.png");
     backgroundSprite->setScale(0.32);
     backgroundSprite->setPosition( Point( visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y ) );
     

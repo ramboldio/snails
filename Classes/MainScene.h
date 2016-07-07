@@ -5,6 +5,7 @@
 
 #define TRANSITION_TIME 0.5
 #define JUMPS_COUNT 10
+#define HELPING_FORCE Vec2(1000,2000)
 #define CUSTOM_GRAVITY Vec2(0.0f, -350.0f)
 
 #include "helpers/ForceHandles.h"
@@ -31,7 +32,8 @@ class MainScene : public Layer
     int jumps = JUMPS_COUNT;
     Snail* _snail;
     ForceHandles* _handles;
-    
+    int glibberFlag;
+
 public:
     MainScene();
     virtual ~MainScene();
