@@ -6,7 +6,8 @@ ForceHandles::ForceHandles(Node *s, Vec2 g) {
     for (int i = 0; i < _handleCount; ++i) {
         auto point = Sprite::create("res/green_point.png");
         point->setVisible(false);
-        _game_layer->addChild(point);
+        point->setScale(1);
+        _game_layer->addChild(point, 20);
         _handleObjs[i] = point;
     }
 }
@@ -26,14 +27,14 @@ void ForceHandles::clearHandles() {
  */
 void ForceHandles::displayHandles(int count, Vec2 start_coord, Vec2 force) {
     if (count > 0){
-        drawHandle(count, start_coord);
-        Vec2 nextPos = start_coord + force.getNormalized() * _defaultHandleOffset; //* force.getLength();
-        displayHandles(count -1, nextPos, force);
+        drawHandle(--count, start_coord);
+        float offset = _defaultHandleOffset * (force.getLength() / 100000);
+        Vec2 nextPos = start_coord + force.getNormalized() * offset;
+        displayHandles(count, nextPos, force);
     } else return;
 }
 
 void ForceHandles::drawHandle(int i, Vec2 pos) {
-    // TODO drawHandle in position of parameter
     _handleObjs[i]->setPosition(pos);
     _handleObjs[i]->setVisible(true);
 }

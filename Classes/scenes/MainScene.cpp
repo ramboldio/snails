@@ -450,6 +450,9 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
 
                 _force = _delta;
                 _force.scale(HELPING_FORCE);
+
+                // display handlers
+                _handles->displayHandles_onSnail(_force, _snail->getSprite()->getPosition());
             }
         }
     }
@@ -476,6 +479,8 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
                 //For Testing
                 log("Force: (%f,%f)",_force.x,_force.y);
                 log("Delta: (%f,%f)",_delta.x,_delta.y);
+
+                _handles->clearHandles();
             }
 }
 
