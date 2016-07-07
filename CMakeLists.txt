@@ -124,7 +124,7 @@ endif( WIN32 )
 
 set(GAME_SRC
         Classes/AppDelegate.cpp
-        Classes/MainScene.cpp
+        Classes/scenes/MainScene.cpp
         Classes/scenes/StartScene.cpp
         Classes/model/Snail.cpp
         Classes/scenes/GameOverScene.cpp
@@ -134,7 +134,7 @@ set(GAME_SRC
 
 set(GAME_HEADERS
         Classes/AppDelegate.h
-        Classes/MainScene.h
+        Classes/scenes/MainScene.h
         Classes/scenes/StartScene.h
         Classes/model/Snail.h
         Classes/scenes/GameOverScene.h
