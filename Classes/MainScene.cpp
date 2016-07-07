@@ -486,7 +486,6 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
         }
     //_touch_start = Vec2(-1,-1);
     //}
-    _handles->clearHandles();
 }
 
 

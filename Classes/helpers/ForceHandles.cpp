@@ -24,7 +24,7 @@ void ForceHandles::clearHandles() {
 void ForceHandles::displayHandles(int count, Vec2 start_coord, Vec2 force) {
     if (count > 0){
         drawHandle(start_coord);
-        Vec2 nextPos = start_coord + force.getNormalized() * _defaultHandleOffset;
+        Vec2 nextPos = start_coord + force.getNormalized() * _defaultHandleOffset; //* force.getLength();
         displayHandles(count -1, nextPos, force);
     } else return;
 }
