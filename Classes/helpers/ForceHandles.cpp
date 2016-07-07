@@ -30,6 +30,7 @@ void ForceHandles::displayHandles(int count, Vec2 start_coord, Vec2 force) {
         drawHandle(--count, start_coord);
         float offset = _defaultHandleOffset * (force.getLength() / 100000);
         Vec2 nextPos = start_coord + force.getNormalized() * offset;
+        force = force + _gravity * 100;
         displayHandles(count, nextPos, force);
     } else return;
 }

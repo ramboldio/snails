@@ -13,7 +13,7 @@ class MainScene;
 class ForceHandles : public Layer{
 
     // apperance settings
-    static const int _handleCount = 5;
+    static const int _handleCount = 6;
     static const int _defaultHandleOffset = 20;
 
     Node * _game_layer;
