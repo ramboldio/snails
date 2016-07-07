@@ -57,6 +57,10 @@
 		521A8EA919F11F5000D177D7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 521A8EA819F11F5000D177D7 /* fonts */; };
 		521A8EAA19F11F5000D177D7 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 521A8EA819F11F5000D177D7 /* fonts */; };
 		52B47A471A53D09C004E4C60 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B47A461A53D09B004E4C60 /* Security.framework */; };
+		813474CF1D2E61BD00A5779F /* WinningScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 813474CD1D2E61BD00A5779F /* WinningScene.cpp */; };
+		813474D11D2E623D00A5779F /* WinningScene.h in Sources */ = {isa = PBXBuildFile; fileRef = 813474CE1D2E61BD00A5779F /* WinningScene.h */; };
+		813474D21D2E624100A5779F /* Snail.h in Sources */ = {isa = PBXBuildFile; fileRef = 819006571D213F610088A6C8 /* Snail.h */; };
+		813474D31D2E624700A5779F /* GameOverScene.h in Sources */ = {isa = PBXBuildFile; fileRef = AF0461F01D2A5BB5008042A6 /* GameOverScene.h */; };
 		819006581D213F610088A6C8 /* Snail.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 819006561D213F610088A6C8 /* Snail.cpp */; };
 		81BEE8BB1D17E5F30013AE5D /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81BEE8B91D17E5F30013AE5D /* MainScene.cpp */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
@@ -163,6 +167,8 @@
 		521A8E6319F0C34300D177D7 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x.png"; sourceTree = "<group>"; };
 		521A8EA819F11F5000D177D7 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		52B47A461A53D09B004E4C60 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		813474CD1D2E61BD00A5779F /* WinningScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WinningScene.cpp; sourceTree = "<group>"; };
+		813474CE1D2E61BD00A5779F /* WinningScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinningScene.h; sourceTree = "<group>"; };
 		819006561D213F610088A6C8 /* Snail.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Snail.cpp; sourceTree = "<group>"; };
 		819006571D213F610088A6C8 /* Snail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Snail.h; sourceTree = "<group>"; };
 		81BEE8B91D17E5F30013AE5D /* MainScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainScene.cpp; sourceTree = "<group>"; };
@@ -323,6 +329,8 @@
 				AF0461EF1D2A5BB5008042A6 /* GameOverScene.cpp */,
 				819006561D213F610088A6C8 /* Snail.cpp */,
 				819006571D213F610088A6C8 /* Snail.h */,
+				813474CD1D2E61BD00A5779F /* WinningScene.cpp */,
+				813474CE1D2E61BD00A5779F /* WinningScene.h */,
 			);
 			name = Classes;
 			path = ../Classes;
@@ -533,9 +541,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				813474D31D2E624700A5779F /* GameOverScene.h in Sources */,
+				813474D21D2E624100A5779F /* Snail.h in Sources */,
+				813474D11D2E623D00A5779F /* WinningScene.h in Sources */,
 				886719FD1D18084B000E7410 /* AppDelegate.h in Sources */,
 				819006581D213F610088A6C8 /* Snail.cpp in Sources */,
 				886719FE1D18084B000E7410 /* StartScene.h in Sources */,
+				813474CF1D2E61BD00A5779F /* WinningScene.cpp in Sources */,
 				886719FF1D18084B000E7410 /* MainScene.h in Sources */,
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
