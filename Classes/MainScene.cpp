@@ -1,11 +1,12 @@
 #include "MainScene.h"
-#include "StartScene.h"
+#include "scenes/StartScene.h"
 #include "SimpleAudioEngine.h"
 #include <cstring>
-#include "GameOverScene.h"
+#include "scenes/GameOverScene.h"
 
 #define COCOS2D_DEBUG 1
 #define TRANSITION_TIME 0.5
+
 USING_NS_CC;
 
 using namespace std;
@@ -28,13 +29,14 @@ Scene* MainScene::createScene() {
 
     auto main_scene = Scene::createWithPhysics();
     auto layer = MainScene::create();
-    
-    
-    main_scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-    
-    main_scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f));
+
+    #if COCOS2D_DEBUG
+        main_scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    #endif
+
+    main_scene->getPhysicsWorld()->setGravity(CUSTOM_GRAVITY);
     main_scene->addChild(layer, 0, 0);
-    
+
     return main_scene;
 }
 
@@ -236,7 +238,8 @@ bool MainScene::init() {
     contactListener->onContactBegin = CC_CALLBACK_1(MainScene::onContactBegin, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
    
-    
+    // HANDLES
+    _handles = new ForceHandles(this, CUSTOM_GRAVITY);
     
     this->scheduleUpdate();
     
@@ -280,7 +283,7 @@ void changeTreePhBody() {
     Vec2 old_pos = tree->getPosition();
     auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
                                                 tree->getContentSize().height),
-                                           PhysicsMaterial(1.0f, 0.0f, 0.0f));
+                                           PhysicsMaterial(1.0f, 0.6f, 0.0f));
     treeBody->setContactTestBitmask(0xFFFFFFFFF);
     treeBody->setDynamic(false);
     tree->setPhysicsBody(treeBody);
@@ -448,7 +451,7 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
                     //TODO add & update arrow for force
                     
                 }else{
-                    //TODO arrow dashed -> not enough power to fly
+                    _handles->displayHandles_onSnail(_force, _snail->getSprite()->getPosition());
                 }
                 _touch_stop = touch->getLocation();
                 log("Move Point Logged");
@@ -520,6 +523,7 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
         }
     //_touch_start = Vec2(-1,-1);
     //}
+    _handles->clearHandles();
 }
 
 
