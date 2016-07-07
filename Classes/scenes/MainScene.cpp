@@ -191,6 +191,7 @@ bool MainScene::init() {
                                               PhysicsMaterial(1.0f, 0.0f, 1.0f));
     stationBody->setDynamic(false);
     stationBody->setGravityEnable(false);
+    stationBody->setContactTestBitmask(0xFFFFFFFFF);
     station->setPhysicsBody(stationBody);
     station->setPosition(1440.74, _center.y);
     spritebatch->addChild(station);
@@ -322,7 +323,7 @@ void MainScene::update(float dt) {
         Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
     }
     
-    if (_snail->getSprite()->getPosition().x>1430&&_snail->getSprite()->getPosition().y>300) {
+    if (_snail->getSprite()->getPosition().x>1430 && _snail->getSprite()->getPosition().y>300 && _snail->getSprite()->getPosition().y<325) {
         auto scene = WinningScene::createScene();
         Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
     }
@@ -347,6 +348,7 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             tree_state = false;
             spriteAction("tree", nodeB, 4, false, 0.1, 0);
             score += 1;
+            glibberFlag = 1;
         }
    
     }
