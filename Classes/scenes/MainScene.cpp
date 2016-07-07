@@ -1,9 +1,9 @@
-#include "MainScene.h"
-#include "scenes/StartScene.h"
+#include "../scenes/MainScene.h"
+#include "../scenes/StartScene.h"
 #include "SimpleAudioEngine.h"
 #include <cstring>
-#include "scenes/GameOverScene.h"
-#include "scenes/WinningScene.h"
+#include "../scenes/GameOverScene.h"
+#include "../scenes/WinningScene.h"
 
 #define COCOS2D_DEBUG 1
 #define TRANSITION_TIME 0.5

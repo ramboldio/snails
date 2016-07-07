@@ -9,9 +9,9 @@
 #define CUSTOM_GRAVITY Vec2(0.0f, -350.0f)
 
 #include <model/Snail.h>
-#include "helpers/ForceHandles.h"
+#include "../helpers/ForceHandles.h"
 #include "cocos2d.h"
-#include "model/Snail.h"
+#include "../model/Snail.h"
 
 using namespace cocos2d;
 

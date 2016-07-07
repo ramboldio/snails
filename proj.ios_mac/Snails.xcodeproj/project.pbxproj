@@ -17,8 +17,8 @@
 		17609D741D2E9800003FF1D8 /* Snail.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17609D711D2E9800003FF1D8 /* Snail.cpp */; settings = {ASSET_TAGS = (); }; };
 		17609D781D2E9811003FF1D8 /* ForceHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17609D761D2E9811003FF1D8 /* ForceHandles.cpp */; settings = {ASSET_TAGS = (); }; };
 		17609D791D2E9811003FF1D8 /* ForceHandles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17609D761D2E9811003FF1D8 /* ForceHandles.cpp */; settings = {ASSET_TAGS = (); }; };
-		17609D821D2E997F003FF1D8 /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17609D801D2E997F003FF1D8 /* MainScene.cpp */; settings = {ASSET_TAGS = (); }; };
-		17609D831D2E997F003FF1D8 /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17609D801D2E997F003FF1D8 /* MainScene.cpp */; settings = {ASSET_TAGS = (); }; };
+		17609D861D2E9AF4003FF1D8 /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17609D841D2E9AF4003FF1D8 /* MainScene.cpp */; settings = {ASSET_TAGS = (); }; };
+		17609D871D2E9AF4003FF1D8 /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17609D841D2E9AF4003FF1D8 /* MainScene.cpp */; settings = {ASSET_TAGS = (); }; };
 		1AC6FB21180E996B004C840B /* libcocos2d Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAF9180E9839004C840B /* libcocos2d Mac.a */; };
 		1AC6FB30180E99EB004C840B /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB07180E9839004C840B /* libcocos2d iOS.a */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -129,8 +129,8 @@
 		17609D721D2E9800003FF1D8 /* Snail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Snail.h; path = model/Snail.h; sourceTree = "<group>"; };
 		17609D761D2E9811003FF1D8 /* ForceHandles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ForceHandles.cpp; path = helpers/ForceHandles.cpp; sourceTree = "<group>"; };
 		17609D771D2E9811003FF1D8 /* ForceHandles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForceHandles.h; path = helpers/ForceHandles.h; sourceTree = "<group>"; };
-		17609D801D2E997F003FF1D8 /* MainScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainScene.cpp; sourceTree = "<group>"; };
-		17609D811D2E997F003FF1D8 /* MainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainScene.h; sourceTree = "<group>"; };
+		17609D841D2E9AF4003FF1D8 /* MainScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainScene.cpp; path = scenes/MainScene.cpp; sourceTree = "<group>"; };
+		17609D851D2E9AF4003FF1D8 /* MainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainScene.h; path = scenes/MainScene.h; sourceTree = "<group>"; };
 		1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = ../cocos2d/build/cocos2d_libs.xcodeproj; sourceTree = "<group>"; };
 		1ACB3243164770DE00914215 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -260,6 +260,8 @@
 		17609D4F1D2E9760003FF1D8 /* scenes */ = {
 			isa = PBXGroup;
 			children = (
+				17609D841D2E9AF4003FF1D8 /* MainScene.cpp */,
+				17609D851D2E9AF4003FF1D8 /* MainScene.h */,
 				17609D651D2E97EA003FF1D8 /* GameOverScene.cpp */,
 				17609D661D2E97EA003FF1D8 /* GameOverScene.h */,
 				17609D671D2E97EA003FF1D8 /* StartScene.cpp */,
@@ -355,8 +357,6 @@
 			children = (
 				46880B8419C43A87006E1F66 /* AppDelegate.cpp */,
 				46880B8519C43A87006E1F66 /* AppDelegate.h */,
-				17609D801D2E997F003FF1D8 /* MainScene.cpp */,
-				17609D811D2E997F003FF1D8 /* MainScene.h */,
 				17609D4D1D2E972E003FF1D8 /* model */,
 				17609D751D2E9804003FF1D8 /* helpers */,
 				17609D4F1D2E9760003FF1D8 /* scenes */,
@@ -559,7 +559,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				17609D6D1D2E97EA003FF1D8 /* StartScene.cpp in Sources */,
-				17609D821D2E997F003FF1D8 /* MainScene.cpp in Sources */,
+				17609D861D2E9AF4003FF1D8 /* MainScene.cpp in Sources */,
 				17609D781D2E9811003FF1D8 /* ForceHandles.cpp in Sources */,
 				17609D6F1D2E97EA003FF1D8 /* WinningScene.cpp in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
@@ -580,7 +580,7 @@
 				17609D741D2E9800003FF1D8 /* Snail.cpp in Sources */,
 				46880B8919C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				17609D791D2E9811003FF1D8 /* ForceHandles.cpp in Sources */,
-				17609D831D2E997F003FF1D8 /* MainScene.cpp in Sources */,
+				17609D871D2E9AF4003FF1D8 /* MainScene.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
 				17609D6C1D2E97EA003FF1D8 /* GameOverScene.cpp in Sources */,
 				17609D701D2E97EA003FF1D8 /* WinningScene.cpp in Sources */,
