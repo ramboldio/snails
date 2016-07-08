@@ -25,7 +25,7 @@ Node* tree;
 Node* stone;
 
 bool tree_state = true;
-
+bool stone_ground = false;
 
 Scene* MainScene::createScene() {
 
@@ -202,9 +202,10 @@ bool MainScene::init() {
     //stoneBody->setCollisionBitmask(0x02);   // 0001
     stoneBody->setDynamic(true);
     stone->setPhysicsBody(stoneBody);
-    
+    stone->setTag(3);
     stoneBody->setName("stone");
-    stoneBody->setRotationEnable(true);
+    stoneBody->setRotationEnable(false);
+    stoneBody->setTag(3);
     
     stone->setPosition(_center.x - 400, stone->getContentSize().height*0.8);
     
@@ -239,12 +240,15 @@ bool MainScene::init() {
 
     //      ground
     auto ground = Sprite::create("res/ground.png");
-    auto groundBody = PhysicsBody::createBox(Size(ground->getContentSize().width, 200.0f), PhysicsMaterial(1.0f, 0.0f, /*0.9f*/1.0f));
+    auto groundBody = PhysicsBody::createBox(Size(ground->getContentSize().width, 200.0f), PhysicsMaterial(0.0f, 0.0f, /*0.9f*/1.0f));
     groundBody->setDynamic(false);
     groundBody->setTag(0);
+    groundBody->setMass(10.0f);
     groundBody->setContactTestBitmask(0xFFFFFFFFF);
     ground->setPosition(Vec2(_center.x, 16.0f));
     ground->setPhysicsBody(groundBody);
+    ground->setName("ground");
+    ground->setTag(0);
     game_layer->addChild(ground, 1);
     
     //      walls
@@ -320,6 +324,7 @@ void MainScene::createSnail() {
     _snail->getSprite()->setScale(0.1, 0.1);
     _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
     _snail->getSprite()->setName("snail");
+    _snail->setTag(1);
     game_layer->addChild(_snail->getSprite(), 2);
 }
 
@@ -370,6 +375,20 @@ void MainScene::update(float dt) {
         _snail->getSprite()->getPhysicsBody()->resetForces();
         //_snail->getSprite()->getPhysicsBody()->applyForce(Vec2(0,-1000));
     }
+    
+    
+    if (round(stone->getPositionY()) == 116 and not stone_ground) {
+        stone->getPhysicsBody()->setDynamic(false);
+        stone_ground = true;
+        stone->getPhysicsBody()->setRotationEnable(true);
+    }
+    
+    log("pos %f", stone->getRotation());
+    
+    if (stone->getRotation() > 90 or stone->getRotation() < -90) {
+        stone->getPhysicsBody()->setRotationEnable(false);
+        stone->getPhysicsBody()->setEnabled(false);
+    }
         
 }
 
@@ -383,6 +402,7 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
     int collisionSide;
     
     if (nodeA && nodeB) {
+        
         // ground, tree and snail with ContactTestBitmask(0xFFFFFFFFF)
         _snail->ground_state = true;
         _snail->air_state = false;
@@ -399,22 +419,22 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             glibberFlag = 1;
         }
         
- 
         
         if (fabs(round(contactpointx)) == 0 && fabs(round(contactpointy)) == 1) {
             collisionSide = 2; // top
         }
-   
     }
     
-    // to winning scene
+    
+    
+        // to winning scene
     if (collisionSide == 2) {
         if (nodeA->getName() == "snail" and nodeB->getName() == "station") {
             goToWinningScene(this);
         } else if (nodeB->getName() == "snail" and nodeA->getName() == "station") {
             goToWinningScene(this);
         }
-    }
+    } 
     
     /*if (nodeA->getName() == "stone" and nodeB->getName() == "snail") {
         stone->getPhysicsBody()->applyForce(FALLING_FORCE);
