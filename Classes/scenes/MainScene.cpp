@@ -207,7 +207,14 @@ bool MainScene::init() {
     stoneBody->setRotationEnable(true);
     
     stone->setPosition(_center.x - 400, stone->getContentSize().height*0.8);
-    stone->setAnchorPoint(Vec2(stone->getPosition()+stone->getContentSize()/2));
+    
+    /** stein -ein **/
+    stone->setAnchorPoint(Vec2(0,0));
+
+    
+    /** stein -aus
+     stone->setAnchorPoint(Vec2(stone->getPosition()+stone->getContentSize()/2));
+     **/
     log("StoneMass: %f", stoneBody->getMass());
     //stoneBody->setMass(10.0f);
     spritebatch->addChild(stone);
@@ -359,6 +366,7 @@ void MainScene::update(float dt) {
         //
         _snail->getSprite()->getPhysicsBody()->resetForces();
         _snail->getSprite()->setPosition(Vec2(_center.x-_screenSize.width, 156.6f));
+        _snail->getSprite()->getPhysicsBody()->setVelocity(Vec2(0,0));
         _snail->getSprite()->getPhysicsBody()->resetForces();
         //_snail->getSprite()->getPhysicsBody()->applyForce(Vec2(0,-1000));
     }
@@ -391,6 +399,8 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             glibberFlag = 1;
         }
         
+ 
+        
         if (fabs(round(contactpointx)) == 0 && fabs(round(contactpointy)) == 1) {
             collisionSide = 2; // top
         }
@@ -405,7 +415,6 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             goToWinningScene(this);
         }
     }
-    
     
     /*if (nodeA->getName() == "stone" and nodeB->getName() == "snail") {
         stone->getPhysicsBody()->applyForce(FALLING_FORCE);
