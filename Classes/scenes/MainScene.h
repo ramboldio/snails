@@ -7,6 +7,7 @@
 #define JUMPS_COUNT 10
 #define HELPING_FORCE Vec2(1000,2000)
 #define CUSTOM_GRAVITY Vec2(0.0f, -350.0f)
+#define FALLING_FORCE Vec2(100000.0f,100000.0f)
 
 #include "../helpers/ForceHandles.h"
 #include "cocos2d.h"

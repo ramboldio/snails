@@ -177,25 +177,38 @@ bool MainScene::init() {
     treeBody->setDynamic(false);
     tree->setPhysicsBody(treeBody);
     tree->setName("tree");
-    tree->setPosition(_center.x + 300, 250);
+    tree->setPosition(_center.x + 200, 250);
     tree_state = true;
     spritebatch->addChild(tree);
 
     
     //stone
-    auto stone = Sprite::create("res/stone.png");
-    stone->setScale(0.15);
-    game_layer->addChild(stone);
+    stone = Sprite::createWithSpriteFrameName("stone_1.png");
+    //auto stone = Sprite::create("res/stone.png");
+    stone->setScale(0.8);
+    stone->setScaleX(0.1);
+    //game_layer->addChild(stone);
     auto stoneBody = PhysicsBody::createBox(Size(stone->getContentSize().width,
                                                 stone->getContentSize().height),
                                            PhysicsMaterial(0.1f, 0.0f, 1.0f));
-    stoneBody->setContactTestBitmask(0xFFFFFFF00);
+    
+    //stoneBody->setVelocity(Vec2(100,100));
+    stoneBody->setContactTestBitmask(0xFFFFFFFFF);
+    stoneBody->setLinearDamping(1.0f);
+    stoneBody->setAngularDamping(0.0f);
+    //stoneBody->setAngularVelocity(100.0f);
+    
+    //stoneBody->setCategoryBitmask(0x02);    // 0011
+    //stoneBody->setCollisionBitmask(0x02);   // 0001
     stoneBody->setDynamic(true);
     stone->setPhysicsBody(stoneBody);
+    
+    stoneBody->setName("stone");
     stoneBody->setRotationEnable(true);
-    stone->setPosition(_center.x - 300, stone->getContentSize().height*0.15);
+    stone->setPosition(_center.x - 200, stone->getContentSize().height*0.8);
     log("StoneMass: %f", stoneBody->getMass());
     stoneBody->setMass(10.0f);
+    spritebatch->addChild(stone);
 
 
     //      station
@@ -232,7 +245,7 @@ bool MainScene::init() {
                                             Size(32.0f,  origin.y + visibleSize.height*3),
                                             PhysicsMaterial(0.0f, 0.0f, 0.0f) );
     wallBody1->setDynamic(false);
-    wallBody1->setPositionOffset(Vec2(visibleSize.width*2, visibleSize.height-visibleSize.height/2));
+    wallBody1->setPositionOffset(Vec2(visibleSize.width, visibleSize.height-visibleSize.height/2));
     wallBody1->setName("wall1");
     wallBody2->setDynamic(false);
     wallBody2->setPositionOffset(Vec2(-visibleSize.width/2, 0));
@@ -274,8 +287,8 @@ PhysicsBody *createSnailBody(Sprite *snail_sprite){
                                                     Size(snail_sprite->getContentSize().width,
                                                     snail_sprite->getContentSize().height),
                                                     PhysicsMaterial(/*0.8f*/10.0f, /*0.1f*/0.0f, 0.7f));
-    //snail_body->setMass(10.0f);
-    snail_body->setMass(100.0f);//For testing stone collision
+    snail_body->setMass(10.0f);
+    //snail_body->setMass(100.0f);//For testing stone collision
     snail_body->setContactTestBitmask(0xFFFFFFFFF);
     snail_body->setCategoryBitmask(0x02);    // 0011
     snail_body->setCollisionBitmask(0x01);   // 0001
@@ -366,7 +379,20 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             score += 1;
             glibberFlag = 1;
         }
+        
+        
    
+    }
+    if (nodeA->getName() == "stone" and nodeB->getName() == "snail") {
+        stone->getPhysicsBody()->applyForce(FALLING_FORCE);
+        _snail->getSprite()->getPhysicsBody()->applyForce(FALLING_FORCE);
+        stone->getPhysicsBody()->setAngularVelocity(10.0f);
+        log("Stone hit");
+    } else if (nodeB->getName() == "stone" and nodeA->getName() == "snail") {
+        stone->getPhysicsBody()->applyForce(FALLING_FORCE);
+        _snail->getSprite()->getPhysicsBody()->applyForce(FALLING_FORCE);
+        stone->getPhysicsBody()->setAngularVelocity(10.0f);
+        log("Stone hit");
     }
     
     return true;
@@ -479,7 +505,7 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
 void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event) {
             if(_touch_start!=_touch_stop && _touch_start!=Vec2(-1,-1) && _touch_stop!=Vec2(-1,-1)&&_snail->ground_state){
                 //TODO Bugfix Overdosed first shot
-                 _force.scale(10);//For testing higher sail weight.
+                 //_force.scale(10);//For testing higher sail weight.
                 _snail->getSprite()->getPhysicsBody()->applyForce(_force);
                 
                 jumps -= 1;
