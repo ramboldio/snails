@@ -172,7 +172,7 @@ bool MainScene::init() {
     tree->setScale(0.5);
     auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
                                                 tree->getContentSize().height),
-                                           PhysicsMaterial(1.0f, 20.0f, 0.0f));
+                                           PhysicsMaterial(1.0f, 100.0f, 0.0f));
     treeBody->setContactTestBitmask(0xFFFFFFFFF);
     treeBody->setDynamic(false);
     tree->setPhysicsBody(treeBody);
@@ -186,16 +186,16 @@ bool MainScene::init() {
     stone = Sprite::createWithSpriteFrameName("stone_1.png");
     //auto stone = Sprite::create("res/stone.png");
     stone->setScale(0.8);
-    stone->setScaleX(0.1);
+    //stone->setScaleX(0.1);
     //game_layer->addChild(stone);
     auto stoneBody = PhysicsBody::createBox(Size(stone->getContentSize().width,
                                                 stone->getContentSize().height),
-                                           PhysicsMaterial(0.1f, 0.0f, 1.0f));
+                                           PhysicsMaterial(0.0f, 0.0f, 1.0f));
     
     //stoneBody->setVelocity(Vec2(100,100));
     stoneBody->setContactTestBitmask(0xFFFFFFFFF);
-    stoneBody->setLinearDamping(1.0f);
-    stoneBody->setAngularDamping(0.0f);
+    //stoneBody->setLinearDamping(1.0f);
+    //stoneBody->setAngularDamping(0.0f);
     //stoneBody->setAngularVelocity(100.0f);
     
     //stoneBody->setCategoryBitmask(0x02);    // 0011
@@ -205,9 +205,10 @@ bool MainScene::init() {
     
     stoneBody->setName("stone");
     stoneBody->setRotationEnable(true);
-    stone->setPosition(_center.x - 200, stone->getContentSize().height*0.8);
+    stone->setPosition(_center.x - 400, stone->getContentSize().height*0.8);
+    stone->setAnchorPoint(Vec2(0.0,0.0));
     log("StoneMass: %f", stoneBody->getMass());
-    stoneBody->setMass(10.0f);
+    //stoneBody->setMass(10.0f);
     spritebatch->addChild(stone);
 
 
@@ -286,7 +287,7 @@ PhysicsBody *createSnailBody(Sprite *snail_sprite){
     PhysicsBody *snail_body = PhysicsBody::createBox(
                                                     Size(snail_sprite->getContentSize().width,
                                                     snail_sprite->getContentSize().height),
-                                                    PhysicsMaterial(/*0.8f*/10.0f, /*0.1f*/0.0f, 0.7f));
+                                                    PhysicsMaterial(0.8f, /*0.1f*/0.0f, 0.7f));
     snail_body->setMass(10.0f);
     //snail_body->setMass(100.0f);//For testing stone collision
     snail_body->setContactTestBitmask(0xFFFFFFFFF);
