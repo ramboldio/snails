@@ -5,7 +5,7 @@
 #include "../scenes/GameOverScene.h"
 #include "../scenes/WinningScene.h"
 
-#define COCOS2D_DEBUG 0
+#define COCOS2D_DEBUG 1
 #define TRANSITION_TIME 0.5
 
 USING_NS_CC;
@@ -172,7 +172,7 @@ bool MainScene::init() {
     tree->setScale(0.5);
     auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
                                                 tree->getContentSize().height),
-                                           PhysicsMaterial(1.0f, 0.0f, 0.0f));
+                                           PhysicsMaterial(1.0f, 20.0f, 0.0f));
     treeBody->setContactTestBitmask(0xFFFFFFFFF);
     treeBody->setDynamic(false);
     tree->setPhysicsBody(treeBody);
@@ -184,17 +184,18 @@ bool MainScene::init() {
     
     //stone
     auto stone = Sprite::create("res/stone.png");
-    stone->setScale(0.2);
+    stone->setScale(0.15);
     game_layer->addChild(stone);
     auto stoneBody = PhysicsBody::createBox(Size(stone->getContentSize().width,
                                                 stone->getContentSize().height),
-                                           PhysicsMaterial(0.1f, 10.0f, 1.0f));
+                                           PhysicsMaterial(0.1f, 0.0f, 1.0f));
     stoneBody->setContactTestBitmask(0xFFFFFFF00);
     stoneBody->setDynamic(true);
     stone->setPhysicsBody(stoneBody);
-    stone->setPosition(_center.x - 300, stone->getContentSize().height*0.2);
+    stoneBody->setRotationEnable(true);
+    stone->setPosition(_center.x - 300, stone->getContentSize().height*0.15);
     log("StoneMass: %f", stoneBody->getMass());
-    stoneBody->setMass(2.0f);
+    stoneBody->setMass(10.0f);
 
 
     //      station
@@ -215,7 +216,7 @@ bool MainScene::init() {
 
     //      ground
     auto ground = Sprite::create("res/ground.png");
-    auto groundBody = PhysicsBody::createBox(Size(ground->getContentSize().width, 200.0f), PhysicsMaterial(1.0f, 0.0f, 0.9f));
+    auto groundBody = PhysicsBody::createBox(Size(ground->getContentSize().width, 200.0f), PhysicsMaterial(1.0f, 0.0f, /*0.9f*/1.0f));
     groundBody->setDynamic(false);
     groundBody->setTag(0);
     groundBody->setContactTestBitmask(0xFFFFFFFFF);
@@ -231,7 +232,7 @@ bool MainScene::init() {
                                             Size(32.0f,  origin.y + visibleSize.height*3),
                                             PhysicsMaterial(0.0f, 0.0f, 0.0f) );
     wallBody1->setDynamic(false);
-    wallBody1->setPositionOffset(Vec2(visibleSize.width, visibleSize.height-visibleSize.height/2));
+    wallBody1->setPositionOffset(Vec2(visibleSize.width*2, visibleSize.height-visibleSize.height/2));
     wallBody1->setName("wall1");
     wallBody2->setDynamic(false);
     wallBody2->setPositionOffset(Vec2(-visibleSize.width/2, 0));
@@ -272,8 +273,9 @@ PhysicsBody *createSnailBody(Sprite *snail_sprite){
     PhysicsBody *snail_body = PhysicsBody::createBox(
                                                     Size(snail_sprite->getContentSize().width,
                                                     snail_sprite->getContentSize().height),
-                                                    PhysicsMaterial(/*0.8f*/10.0f, 0.1f, 0.7f));
-    snail_body->setMass(10.0f);
+                                                    PhysicsMaterial(/*0.8f*/10.0f, /*0.1f*/0.0f, 0.7f));
+    //snail_body->setMass(10.0f);
+    snail_body->setMass(100.0f);//For testing stone collision
     snail_body->setContactTestBitmask(0xFFFFFFFFF);
     snail_body->setCategoryBitmask(0x02);    // 0011
     snail_body->setCollisionBitmask(0x01);   // 0001
@@ -477,6 +479,7 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
 void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event) {
             if(_touch_start!=_touch_stop && _touch_start!=Vec2(-1,-1) && _touch_stop!=Vec2(-1,-1)&&_snail->ground_state){
                 //TODO Bugfix Overdosed first shot
+                 _force.scale(10);//For testing higher sail weight.
                 _snail->getSprite()->getPhysicsBody()->applyForce(_force);
                 
                 jumps -= 1;
