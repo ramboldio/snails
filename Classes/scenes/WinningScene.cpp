@@ -32,9 +32,9 @@ bool WinningScene::init() {
     
     
     
-    auto start_btn = MenuItemImage::create("res/tryagain.png", "res/tryagain.png", CC_CALLBACK_1(WinningScene::goToMainScene, this) );
-    start_btn->setScale(0.3);
-    start_btn->setPosition(Vec2(visibleSize.width/2.7, visibleSize.height/1.2 + origin.y  - start_btn->getContentSize().height));
+    auto start_btn = MenuItemImage::create("res/button.png", "res/button_clicked.png", CC_CALLBACK_1(WinningScene::goToMainScene, this) );
+    start_btn->setScale(0.8);
+    start_btn->setPosition(Vec2(visibleSize.width/1.5, visibleSize.height/1.2 + origin.y  - start_btn->getContentSize().height));
     
     auto menu = Menu::create(start_btn, NULL);
     menu->setPosition(Point::ZERO);
