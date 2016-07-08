@@ -1,11 +1,13 @@
-#include "MainScene.h"
-#include "StartScene.h"
+#include "../scenes/MainScene.h"
+#include "../scenes/StartScene.h"
 #include "SimpleAudioEngine.h"
 #include <cstring>
-#include "GameOverScene.h"
+#include "../scenes/GameOverScene.h"
+#include "../scenes/WinningScene.h"
 
 #define COCOS2D_DEBUG 1
 #define TRANSITION_TIME 0.5
+
 USING_NS_CC;
 
 using namespace std;
@@ -20,6 +22,7 @@ MainScene::~MainScene(){}
 
 Node* station;
 Node* tree;
+Node* stone;
 
 bool tree_state = true;
 
@@ -28,13 +31,14 @@ Scene* MainScene::createScene() {
 
     auto main_scene = Scene::createWithPhysics();
     auto layer = MainScene::create();
-    
-    
-    main_scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-    
-    main_scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f));
+
+    #if COCOS2D_DEBUG
+        main_scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    #endif
+
+    main_scene->getPhysicsWorld()->setGravity(CUSTOM_GRAVITY);
     main_scene->addChild(layer, 0, 0);
-    
+
     return main_scene;
 }
 
@@ -84,7 +88,7 @@ void spriteAction(char* name, Node* _node, int sp_count, bool repeat_flag, float
 bool MainScene::init() {
     
     score = 0;
-    
+    glibberFlag = 0;
     if ( !Layer::init() ) {
         return false;
     }
@@ -101,9 +105,10 @@ bool MainScene::init() {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     _screenSize = visibleSize;
-    _delta = Vec2(0,0);
+    //_delta = Vec2(0,0);
     _center = Vec2(_screenSize.width * 0.5, _screenSize.height * 0.5);
-    _touch_start = Vec2(0,0);
+    //_touch_start = Vec2(-1,-1); //Init State -1,-1 -> Not recorded yet
+    //_touch_stop = Vec2(-1,-1);
    
     float playfield_width = _screenSize.width * 2.0; // make the x-boundry 2 times the screen width
     float playfield_height = _screenSize.height * 2.0; // make the y-boundry 2 times the screen height
@@ -167,14 +172,44 @@ bool MainScene::init() {
     tree->setScale(0.5);
     auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
                                                 tree->getContentSize().height),
-                                           PhysicsMaterial(1.0f, 0.0f, 0.0f));
+                                           PhysicsMaterial(1.0f, 20.0f, 0.0f));
     treeBody->setContactTestBitmask(0xFFFFFFFFF);
     treeBody->setDynamic(false);
     tree->setPhysicsBody(treeBody);
     tree->setName("tree");
-    tree->setPosition(_center.x - 200, 250);
+    tree->setPosition(_center.x + 200, 250);
     tree_state = true;
     spritebatch->addChild(tree);
+
+    
+    //stone
+    stone = Sprite::createWithSpriteFrameName("stone_1.png");
+    //auto stone = Sprite::create("res/stone.png");
+    stone->setScale(0.8);
+    stone->setScaleX(0.1);
+    //game_layer->addChild(stone);
+    auto stoneBody = PhysicsBody::createBox(Size(stone->getContentSize().width,
+                                                stone->getContentSize().height),
+                                           PhysicsMaterial(0.1f, 0.0f, 1.0f));
+    
+    //stoneBody->setVelocity(Vec2(100,100));
+    stoneBody->setContactTestBitmask(0xFFFFFFFFF);
+    stoneBody->setLinearDamping(1.0f);
+    stoneBody->setAngularDamping(0.0f);
+    //stoneBody->setAngularVelocity(100.0f);
+    
+    //stoneBody->setCategoryBitmask(0x02);    // 0011
+    //stoneBody->setCollisionBitmask(0x02);   // 0001
+    stoneBody->setDynamic(true);
+    stone->setPhysicsBody(stoneBody);
+    
+    stoneBody->setName("stone");
+    stoneBody->setRotationEnable(true);
+    stone->setPosition(_center.x - 200, stone->getContentSize().height*0.8);
+    log("StoneMass: %f", stoneBody->getMass());
+    stoneBody->setMass(10.0f);
+    spritebatch->addChild(stone);
+
 
     //      station
     station = Sprite::createWithSpriteFrameName("station_1.png");
@@ -184,6 +219,7 @@ bool MainScene::init() {
                                               PhysicsMaterial(1.0f, 0.0f, 1.0f));
     stationBody->setDynamic(false);
     stationBody->setGravityEnable(false);
+    stationBody->setContactTestBitmask(0xFFFFFFFFF);
     station->setPhysicsBody(stationBody);
     station->setPosition(1440.74, _center.y);
     spritebatch->addChild(station);
@@ -193,7 +229,7 @@ bool MainScene::init() {
 
     //      ground
     auto ground = Sprite::create("res/ground.png");
-    auto groundBody = PhysicsBody::createBox(Size(ground->getContentSize().width, 200.0f), PhysicsMaterial(1.0f, 0.0f, 0.9f));
+    auto groundBody = PhysicsBody::createBox(Size(ground->getContentSize().width, 200.0f), PhysicsMaterial(1.0f, 0.0f, /*0.9f*/1.0f));
     groundBody->setDynamic(false);
     groundBody->setTag(0);
     groundBody->setContactTestBitmask(0xFFFFFFFFF);
@@ -235,7 +271,8 @@ bool MainScene::init() {
     contactListener->onContactBegin = CC_CALLBACK_1(MainScene::onContactBegin, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
    
-    
+    // HANDLES
+    _handles = new ForceHandles(game_layer, CUSTOM_GRAVITY);
     
     this->scheduleUpdate();
     
@@ -249,8 +286,9 @@ PhysicsBody *createSnailBody(Sprite *snail_sprite){
     PhysicsBody *snail_body = PhysicsBody::createBox(
                                                     Size(snail_sprite->getContentSize().width,
                                                     snail_sprite->getContentSize().height),
-                                                    PhysicsMaterial(0.5f, 0.1f, 0.7f));
+                                                    PhysicsMaterial(/*0.8f*/10.0f, /*0.1f*/0.0f, 0.7f));
     snail_body->setMass(10.0f);
+    //snail_body->setMass(100.0f);//For testing stone collision
     snail_body->setContactTestBitmask(0xFFFFFFFFF);
     snail_body->setCategoryBitmask(0x02);    // 0011
     snail_body->setCollisionBitmask(0x01);   // 0001
@@ -267,8 +305,8 @@ PhysicsBody *createSnailBody(Sprite *snail_sprite){
 void MainScene::createSnail() {
     
     _snail = new Snail();
-    _snail->getSprite()->setTexture("res/snail_base.png");
-    _snail->getSprite()->setPosition(Vec2(_center.x, 156.6f)); // log("%f ", _snail->getSprite()->getPosition().y);
+    _snail->getSprite()->setTexture("res/norm/snail_base.png");
+    _snail->getSprite()->setPosition(Vec2(_center.x-_screenSize.width, 156.6f)); // log("%f ", _snail->getSprite()->getPosition().y);
     _snail->getSprite()->setScale(0.1, 0.1);
     _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
     _snail->getSprite()->setName("snail");
@@ -279,7 +317,7 @@ void changeTreePhBody() {
     Vec2 old_pos = tree->getPosition();
     auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
                                                 tree->getContentSize().height),
-                                           PhysicsMaterial(1.0f, 0.0f, 0.0f));
+                                           PhysicsMaterial(1.0f, 0.6f, 0.0f));
     treeBody->setContactTestBitmask(0xFFFFFFFFF);
     treeBody->setDynamic(false);
     tree->setPhysicsBody(treeBody);
@@ -288,27 +326,34 @@ void changeTreePhBody() {
 
 
 void MainScene::update(float dt) {
-    
-    label_score->setString(set_label(1, score));
+   
+    //score = abs(game_layer->getPosition().x);
+    label_score->setString( set_label(1, score));
     label_jumps->setString(set_label(2, jumps));
     
     if (not _snail->air_state and _snail->getSprite()->getPhysicsBody()->getVelocity().y < 0) {
-        _snail->getSprite()->setTexture("res/snail_lands.png");
+        _snail->getSprite()->setTexture("res/norm/snail_lands.png");
         _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
         _snail->base = false;
         _snail->air_state = true;
     }
     
     if(_snail->ground_state and not _snail->base) {
-        _snail->getSprite()->setTexture("res/snail_base.png");
+        _snail->getSprite()->setTexture("res/norm/snail_base.png");
         _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
         _snail->base = true;
     }
     
     if (not tree_state) changeTreePhBody();
     
-    if (jumps == 0) {
+    //TODO change when jump finished -> check if last jump successfull
+    if (jumps == 0 && !_snail->air_state) {
         auto scene = GameOverScene::createScene();
+        Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
+    }
+    
+    if (_snail->getSprite()->getPosition().x>1430 && _snail->getSprite()->getPosition().y>300 && _snail->getSprite()->getPosition().y<325) {
+        auto scene = WinningScene::createScene();
         Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
     }
 }
@@ -327,12 +372,27 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             tree_state = false;
             spriteAction("tree", nodeA, 4, false, 0.1, 0);
             score += 1;
+            glibberFlag = 1;
         } else if (nodeB->getName() == "tree" and nodeA->getName() == "snail" and tree_state) {
             tree_state = false;
             spriteAction("tree", nodeB, 4, false, 0.1, 0);
             score += 1;
+            glibberFlag = 1;
         }
+        
+        
    
+    }
+    if (nodeA->getName() == "stone" and nodeB->getName() == "snail") {
+        stone->getPhysicsBody()->applyForce(FALLING_FORCE);
+        _snail->getSprite()->getPhysicsBody()->applyForce(FALLING_FORCE);
+        stone->getPhysicsBody()->setAngularVelocity(10.0f);
+        log("Stone hit");
+    } else if (nodeB->getName() == "stone" and nodeA->getName() == "snail") {
+        stone->getPhysicsBody()->applyForce(FALLING_FORCE);
+        _snail->getSprite()->getPhysicsBody()->applyForce(FALLING_FORCE);
+        stone->getPhysicsBody()->setAngularVelocity(10.0f);
+        log("Stone hit");
     }
     
     return true;
@@ -368,84 +428,105 @@ void MainScene::station_way(Node* station) {
 
 void MainScene::onTouchesBegan(const std::vector<Touch*> &touches, Event* event) {
     for (auto touch : touches) {
-        if (touch != nullptr) {
-            _delta = touch->getLocation();
-            auto target = static_cast<Sprite*>(event->getCurrentTarget());
-
-            //Get the position of the current point relative to the button
-            Point locationInNode = target->convertToNodeSpace(touch->getLocation());
-            Size s = target->getContentSize();
+        if (touch != nullptr&&_snail->ground_state) {
+            log("Touched: %f, %f",touch->getLocation().x, touch->getLocation().y);
+            //TODO add camera Movement to Touch
+            log("GameLayerPos: %f, %f",game_layer->getPosition().x, game_layer->getPosition().y);
+            _touch_start = Vec2(-1,-1);
+            _touch_stop = Vec2(-1,-1);
             Rect rect = _snail->getSprite()->getBoundingBox();
-
-            //Check the click area
-            if (rect.containsPoint(locationInNode)) {
-
-                log("toch began... x = %f, y = %f", locationInNode.x, locationInNode.y);
-                _snail->getSprite()->setTexture("res/norm/snail_touch.png");
+            rect.origin = rect.origin + game_layer->getPosition();
+            if(rect.containsPoint(touch->getLocation())){
                 _touch_start = touch->getLocation();
-                _touch_stop = touch->getLocation();
+                log("First Point Logged");
             }
+            
         }
     }
 }
 
 void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event){
     for (auto touch : touches) {
-        if (touch != nullptr) {
-            _touch_stop = touch->getLocation();
-            _snail->getSprite()->setTexture("res/snail_touch.png");
-            _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
+        if (touch != nullptr&&_snail->ground_state) {
+            /*_touch_stop = touch->getLocation();
+            //_snail->getSprite()->setTexture("res/snail_touch.png");
+            //_snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));*/
+            
+            //Only Save Point if Valid Start Point
+            
+            //Detect if first Move Point
+            if(_touch_stop==Vec2(-1,-1)){       //TODO if delta high enough
+                _snail->getSprite()->setTexture("res/norm/snail_touch.png");   //Activate Later -> Fix Bounding Box Problem
+                log("Sprite Changed!");
+                //TODO add & update arrow for force
+                
+            }else{
+                //TODO arrow dashed -> not enough power to fly
+            }
+            
+            //log("Move Point Logged");
+            if(_touch_start!=Vec2(-1,-1)){  //TODO
+
+                _touch_stop = touch->getLocation();
+                _delta = _touch_start - _touch_stop;
+
+                if(abs(_delta.x)>200)
+                    _delta.x=(_delta.x<0)?(-200):(200);
+                if(abs(_delta.y)>150)
+                    _delta.y=(_delta.y<0)?(-150):(150);
+                if(abs(_delta.x)<50)
+                    _delta.x=(_delta.x<0)?(-50):(50);
+                if(abs(_delta.y)<50)
+                    _delta.y=(_delta.y<0)?(-50):(50);
+                //Delta Maxs: x:200, y:150
+                //Delta Mins: x:50,  y:50
+                if(glibberFlag){
+                    _delta.scale(0.5);
+                    log("Scaled the Glibber");
+                    //TODO alert
+                }
+
+                if(_delta.x<0){
+                    _snail->getSprite()->setScale(-0.1, 0.1);
+                }else{
+                    _snail->getSprite()->setScale(0.1, 0.1);
+                }
+
+                _force = _delta;
+                _force.scale(HELPING_FORCE);
+
+                // display handlers
+                _handles->displayHandles_onSnail(_force, _snail->getSprite()->getPosition());
+            }
         }
     }
 }
 
 void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event) {
-
-    if (jumps != 0) {
-        for (auto touch : touches) {
-            if (touch != nullptr) {
-
-                // TODO check if touch began on snail body
-
-                float delta = _touch_start.distance(_touch_stop);
-
-                // reject unintended touches
-                if (delta > 2) {
-
-                    float max_pull = 500;
-
-                    if (delta > max_pull) {
-                        delta = max_pull;
-                    }
-
-                    log("Delta was %f", delta);
-                    Vec2 travel = Vec2(_touch_stop.x - _touch_start.x, _touch_stop.y - _touch_start.y);
-
-                    _force = travel.getNormalized() * delta * FORCE_MULTIPLIER * -1;
-                    _force.y = _force.y * ANTI_GRAVITY;
-
-                    log("Force: %f %f", _force.x, _force.y);
-     //               _snail->getPhysicsBody()->applyImpulse(force);
-
-                if (_force.x < 0) {
-                    _snail->getSprite()->setScale(0.1 * -1, 0.1);
-                } else _snail->getSprite()->setScale(0.1, 0.1);
-
-                   jumps -= 1;
-                    _snail->getSprite()->setTexture("res/snail_fly.png");
-                    _snail->base = false;
-                    _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
-
-                    _snail->getSprite()->getPhysicsBody()->applyImpulse(_force);
-                    _snail->ground_state = false;
+            if(_touch_start!=_touch_stop && _touch_start!=Vec2(-1,-1) && _touch_stop!=Vec2(-1,-1)&&_snail->ground_state){
+                //TODO Bugfix Overdosed first shot
+                 //_force.scale(10);//For testing higher sail weight.
+                _snail->getSprite()->getPhysicsBody()->applyForce(_force);
+                
+                jumps -= 1;
+                _snail->getSprite()->setTexture("res/norm/snail_fly.png");
+                _snail->base = false;
+                _snail->ground_state = false;
+                if(glibberFlag){
+                    log("Deactivating glibber Flag");
                 }
+                glibberFlag=(glibberFlag)?(0):(0);
+                
+                //Test if needed
+                _touch_start = Vec2(-1,-1);
+                _touch_stop = Vec2(-1,-1);
 
-            } else {
-                _snail->getSprite()->setTexture("res/snail_base.png");
-                // _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
+                //For Testing
+                log("Force: (%f,%f)",_force.x,_force.y);
+                log("Delta: (%f,%f)",_delta.x,_delta.y);
+
+                _handles->clearHandles();
             }
-        }
-    }
 }
 
 
