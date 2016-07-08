@@ -172,7 +172,7 @@ bool MainScene::init() {
     tree->setScale(0.5);
     auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
                                                 tree->getContentSize().height),
-                                           PhysicsMaterial(1.0f, 100.0f, 0.0f));
+                                           PhysicsMaterial(1.0f, 20.0f, 0.0f));
     treeBody->setContactTestBitmask(0xFFFFFFFFF);
     treeBody->setDynamic(false);
     tree->setPhysicsBody(treeBody);
@@ -209,7 +209,7 @@ bool MainScene::init() {
     stone->setAnchorPoint(Vec2(0.0,0.0));
     log("StoneMass: %f", stoneBody->getMass());
     //stoneBody->setMass(10.0f);
-    spritebatch->addChild(stone);
+    //spritebatch->addChild(stone);
 
 
     //      station
@@ -288,7 +288,7 @@ PhysicsBody *createSnailBody(Sprite *snail_sprite){
     PhysicsBody *snail_body = PhysicsBody::createBox(
                                                     Size(snail_sprite->getContentSize().width,
                                                     snail_sprite->getContentSize().height),
-                                                    PhysicsMaterial(0.8f, /*0.1f*/0.0f, 0.7f));
+                                                    PhysicsMaterial(0.8f, 0.1f, 0.7f));
     snail_body->setMass(10.0f);
     //snail_body->setMass(100.0f);//For testing stone collision
     snail_body->setContactTestBitmask(0xFFFFFFFFF);
@@ -353,13 +353,6 @@ void MainScene::update(float dt) {
         auto scene = GameOverScene::createScene();
         Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
     }
-    
-    /*** to winnin scene wurde jetzt in onContatcBegin realisiert
-    if (_snail->getSprite()->getPosition().x>1430 && _snail->getSprite()->getPosition().y>300 && _snail->getSprite()->getPosition().y<325) {
-        auto scene = WinningScene::createScene();
-        Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
-    }
-    **/
 }
 
 
@@ -398,13 +391,13 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
     if (collisionSide == 2) {
         if (nodeA->getName() == "snail" and nodeB->getName() == "station") {
             goToWinningScene(this);
-        } else if (nodeB->getName() == "snail" and nodeB->getName() == "station") {
+        } else if (nodeB->getName() == "snail" and nodeA->getName() == "station") {
             goToWinningScene(this);
         }
     }
     
     
-    if (nodeA->getName() == "stone" and nodeB->getName() == "snail") {
+    /*if (nodeA->getName() == "stone" and nodeB->getName() == "snail") {
         stone->getPhysicsBody()->applyForce(FALLING_FORCE);
         _snail->getSprite()->getPhysicsBody()->applyForce(FALLING_FORCE);
         stone->getPhysicsBody()->setAngularVelocity(10.0f);
@@ -414,7 +407,7 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
         _snail->getSprite()->getPhysicsBody()->applyForce(FALLING_FORCE);
         stone->getPhysicsBody()->setAngularVelocity(10.0f);
         log("Stone hit");
-    }
+    }*/
     
     return true;
 }
