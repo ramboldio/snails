@@ -48,6 +48,7 @@ public:
     void station_way(Node* station);
     void createSnail();
     void goToGameOverScene(Ref *sender);
+    void goToWinningScene(Ref *sender);
 
     void onTouchesBegan(const std::vector<Touch*> &touches, cocos2d::Event* event);
     void onTouchesMoved(const std::vector<Touch*> &touches, cocos2d::Event* event);

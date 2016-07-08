@@ -214,6 +214,7 @@ bool MainScene::init() {
     //      station
     station = Sprite::createWithSpriteFrameName("station_1.png");
     station->setScale(0.5);
+    station->setName("station");
     auto stationBody = PhysicsBody::createBox(Size(station->getContentSize().width,
                                                    station->getContentSize().height/6),
                                               PhysicsMaterial(1.0f, 0.0f, 1.0f));
@@ -352,16 +353,22 @@ void MainScene::update(float dt) {
         Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
     }
     
+    /*** to winnin scene wurde jetzt in onContatcBegin realisiert
     if (_snail->getSprite()->getPosition().x>1430 && _snail->getSprite()->getPosition().y>300 && _snail->getSprite()->getPosition().y<325) {
         auto scene = WinningScene::createScene();
         Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
     }
+    **/
 }
 
 
 bool MainScene::onContactBegin(PhysicsContact& contact) {
     auto nodeA = contact.getShapeA()->getBody()->getNode();
     auto nodeB = contact.getShapeB()->getBody()->getNode();
+    
+    auto contactpointx = contact.getContactData()->normal.x;
+    auto contactpointy = contact.getContactData()->normal.y;
+    int collisionSide;
     
     if (nodeA && nodeB) {
         // ground, tree and snail with ContactTestBitmask(0xFFFFFFFFF)
@@ -380,9 +387,22 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             glibberFlag = 1;
         }
         
-        
+        if (fabs(round(contactpointx)) == 0 && fabs(round(contactpointy)) == 1) {
+            collisionSide = 2; // top
+        }
    
     }
+    
+    // to winning scene
+    if (collisionSide == 2) {
+        if (nodeA->getName() == "snail" and nodeB->getName() == "station") {
+            goToWinningScene(this);
+        } else if (nodeB->getName() == "snail" and nodeB->getName() == "station") {
+            goToWinningScene(this);
+        }
+    }
+    
+    
     if (nodeA->getName() == "stone" and nodeB->getName() == "snail") {
         stone->getPhysicsBody()->applyForce(FALLING_FORCE);
         _snail->getSprite()->getPhysicsBody()->applyForce(FALLING_FORCE);
@@ -536,6 +556,11 @@ void MainScene::goToGameOverScene(Ref *sender) {
     Director::getInstance()->replaceScene( TransitionFade::create(TRANSITION_TIME, scene) );
 }
 
+void MainScene::goToWinningScene(Ref *sender) {
+    this->cleanup();
+    auto scene = WinningScene::createScene();
+    Director::getInstance()->replaceScene( TransitionFade::create(TRANSITION_TIME, scene) );
+}
 
 void MainScene::menuCloseCallback(Ref* pSender){
     Director::getInstance()->end();
