@@ -205,11 +205,12 @@ bool MainScene::init() {
     
     stoneBody->setName("stone");
     stoneBody->setRotationEnable(true);
+    
     stone->setPosition(_center.x - 400, stone->getContentSize().height*0.8);
-    stone->setAnchorPoint(Vec2(0.0,0.0));
+    stone->setAnchorPoint(Vec2(stone->getPosition()+stone->getContentSize()/2));
     log("StoneMass: %f", stoneBody->getMass());
     //stoneBody->setMass(10.0f);
-    //spritebatch->addChild(stone);
+    spritebatch->addChild(stone);
 
 
     //      station
@@ -353,6 +354,15 @@ void MainScene::update(float dt) {
         auto scene = GameOverScene::createScene();
         Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
     }
+    
+    if(_snail->getSprite()->getPhysicsBody()->getPosition().x>2*_screenSize.height||_snail->getSprite()->getPhysicsBody()->getPosition().y>2*_screenSize.width){
+        //
+        _snail->getSprite()->getPhysicsBody()->resetForces();
+        _snail->getSprite()->setPosition(Vec2(_center.x-_screenSize.width, 156.6f));
+        _snail->getSprite()->getPhysicsBody()->resetForces();
+        //_snail->getSprite()->getPhysicsBody()->applyForce(Vec2(0,-1000));
+    }
+        
 }
 
 
@@ -519,7 +529,7 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
 void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event) {
             if(_touch_start!=_touch_stop && _touch_start!=Vec2(-1,-1) && _touch_stop!=Vec2(-1,-1)&&_snail->ground_state){
                 //TODO Bugfix Overdosed first shot
-                 //_force.scale(10);//For testing higher sail weight.
+                //_force.scale(10);//For testing higher sail weight.
                 _snail->getSprite()->getPhysicsBody()->applyForce(_force);
                 
                 jumps -= 1;
