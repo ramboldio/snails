@@ -177,10 +177,24 @@ bool MainScene::init() {
     treeBody->setDynamic(false);
     tree->setPhysicsBody(treeBody);
     tree->setName("tree");
-    tree->setPosition(_center.x - 200, 250);
+    tree->setPosition(_center.x + 300, 250);
     tree_state = true;
     spritebatch->addChild(tree);
 
+    
+    //stone
+    auto stone = Sprite::create("res/stone.png");
+    stone->setScale(0.2);
+    game_layer->addChild(stone);
+    auto stoneBody = PhysicsBody::createBox(Size(stone->getContentSize().width,
+                                                stone->getContentSize().height),
+                                           PhysicsMaterial(0.1f, 10.0f, 1.0f));
+    stoneBody->setContactTestBitmask(0xFFFFFFF00);
+    stoneBody->setDynamic(true);
+    stone->setPhysicsBody(stoneBody);
+    stone->setPosition(_center.x - 300, stone->getContentSize().height*0.2);
+    log("StoneMass: %f", stoneBody->getMass());
+    stoneBody->setMass(2.0f);
 
 
     //      station
@@ -258,7 +272,7 @@ PhysicsBody *createSnailBody(Sprite *snail_sprite){
     PhysicsBody *snail_body = PhysicsBody::createBox(
                                                     Size(snail_sprite->getContentSize().width,
                                                     snail_sprite->getContentSize().height),
-                                                    PhysicsMaterial(0.8f, 0.1f, 0.7f));
+                                                    PhysicsMaterial(/*0.8f*/10.0f, 0.1f, 0.7f));
     snail_body->setMass(10.0f);
     snail_body->setContactTestBitmask(0xFFFFFFFFF);
     snail_body->setCategoryBitmask(0x02);    // 0011
