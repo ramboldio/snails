@@ -198,19 +198,21 @@ bool MainScene::init() {
     //stoneBody->setAngularDamping(0.0f);
     //stoneBody->setAngularVelocity(100.0f);
     
-    //stoneBody->setCategoryBitmask(0x02);    // 0011
-    //stoneBody->setCollisionBitmask(0x02);   // 0001
+    //stoneBody->setCategoryBitmask(0x01);    // 0011
+    //stoneBody->setCollisionBitmask(0x01);   // 0001
     stoneBody->setDynamic(true);
     stone->setPhysicsBody(stoneBody);
     stone->setTag(3);
     stoneBody->setName("stone");
     stoneBody->setRotationEnable(false);
     stoneBody->setTag(3);
+    stone_ground=false;
     
     stone->setPosition(_center.x - 400, stone->getContentSize().height*0.8);
     
     /** stein -ein **/
-    stone->setAnchorPoint(Vec2(0,0));
+    //stone->setAnchorPoint(Vec2(0,0));
+    stone->setAnchorPoint(Vec2(1,0));
 
     
     /** stein -aus
@@ -385,7 +387,7 @@ void MainScene::update(float dt) {
     
     if (stone->getRotation() > 90 or stone->getRotation() < -90) {
         stone->getPhysicsBody()->setRotationEnable(false);
-        stone->getPhysicsBody()->setEnabled(false);
+        //stone->getPhysicsBody()->setEnabled(false);
     }
         
 }
