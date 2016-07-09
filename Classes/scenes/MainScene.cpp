@@ -5,7 +5,7 @@
 #include "../scenes/GameOverScene.h"
 #include "../scenes/WinningScene.h"
 
-#define COCOS2D_DEBUG 1
+#define COCOS2D_DEBUG 0
 #define TRANSITION_TIME 0.5
 
 USING_NS_CC;
@@ -24,6 +24,7 @@ Node* station;
 Node* tree;
 Node* stone;
 
+bool stone_down = false;
 bool tree_state = true;
 bool stone_ground = false;
 
@@ -128,11 +129,11 @@ bool MainScene::init() {
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
     menu_layer->addChild(closeItem, 3); */
     
-    label_score = Label::createWithTTF(set_label(1, score), "fonts/Marker Felt.ttf", 32);
+    label_score = Label::createWithTTF(set_label(1, score), "fonts/Pixel LCD-7.ttf", 32);
     label_score->setPosition(Vec2(label_score->getContentSize().width,
                                   visibleSize.height - label_score->getContentSize().height));
     
-    label_jumps = Label::createWithTTF(set_label(2, jumps), "fonts/Marker Felt.ttf", 32);
+    label_jumps = Label::createWithTTF(set_label(2, jumps), "fonts/Pixel LCD-7.ttf", 32);
     label_jumps->setPosition(Vec2(label_score->getContentSize().width,
                                  label_score->getPosition().y - label_jumps->getContentSize().height));
     
@@ -184,43 +185,40 @@ bool MainScene::init() {
     
     //stone
     stone = Sprite::createWithSpriteFrameName("stone_1.png");
-    //auto stone = Sprite::create("res/stone.png");
     stone->setScale(0.8);
+    //auto stone = Sprite::create("res/stone.png");
     //stone->setScaleX(0.1);
     //game_layer->addChild(stone);
     auto stoneBody = PhysicsBody::createBox(Size(stone->getContentSize().width,
                                                 stone->getContentSize().height),
                                            PhysicsMaterial(0.0f, 0.0f, 1.0f));
-    
-    //stoneBody->setVelocity(Vec2(100,100));
     stoneBody->setContactTestBitmask(0xFFFFFFFFF);
+    //stoneBody->setVelocity(Vec2(100,100));
     //stoneBody->setLinearDamping(1.0f);
     //stoneBody->setAngularDamping(0.0f);
     //stoneBody->setAngularVelocity(100.0f);
-    
     //stoneBody->setCategoryBitmask(0x01);    // 0011
     //stoneBody->setCollisionBitmask(0x01);   // 0001
     stoneBody->setDynamic(true);
-    stone->setPhysicsBody(stoneBody);
     stone->setTag(3);
     stoneBody->setName("stone");
     stoneBody->setRotationEnable(false);
     stoneBody->setTag(3);
     stone_ground=false;
     
+    stone->setPhysicsBody(stoneBody);
     stone->setPosition(_center.x - 400, stone->getContentSize().height*0.8);
     
     /** stein -ein **/
     //stone->setAnchorPoint(Vec2(0,0));
     stone->setAnchorPoint(Vec2(1,0));
-
+    game_layer->addChild(stone, 3);
     
     /** stein -aus
      stone->setAnchorPoint(Vec2(stone->getPosition()+stone->getContentSize()/2));
      **/
     log("StoneMass: %f", stoneBody->getMass());
     //stoneBody->setMass(10.0f);
-    spritebatch->addChild(stone);
 
 
     //      station
@@ -255,7 +253,7 @@ bool MainScene::init() {
     
     //      walls
     auto wallBody1 = PhysicsBody::createBox(
-                                            Size(32.0f, origin.y + visibleSize.height),
+                                            Size(32.0f, origin.y + visibleSize.height*3),
                                             PhysicsMaterial(0.0f, 0.0f, 0.0f) );
     auto wallBody2 = PhysicsBody::createBox(
                                             Size(32.0f,  origin.y + visibleSize.height*3),
@@ -386,12 +384,21 @@ void MainScene::update(float dt) {
     }
     
     if (stone->getRotation() > 90 or stone->getRotation() < -90) {
-        stone->getPhysicsBody()->setRotationEnable(false);
-        //stone->getPhysicsBody()->setEnabled(false);
+        stone->getPhysicsBody()->setEnabled(false);
+        auto newStoneBody = PhysicsBody::createBox(Size(stone->getContentSize().height,
+                                                        stone->getContentSize().width),
+                                                   PhysicsMaterial(1.0f, 0.0f, 0.0f));
+        stone->setPhysicsBody(newStoneBody);
     }
-        
 }
 
+
+void stone_bit() {
+    stone->getPhysicsBody()->setMass(100);
+    stone->getPhysicsBody()->setDynamic(false);
+    stone->getPhysicsBody()->setGravityEnable(false);
+    stone_down = true;
+}
 
 bool MainScene::onContactBegin(PhysicsContact& contact) {
     auto nodeA = contact.getShapeA()->getBody()->getNode();
@@ -419,14 +426,30 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             glibberFlag = 1;
         }
         
-        
         if (fabs(round(contactpointx)) == 0 && fabs(round(contactpointy)) == 1) {
             collisionSide = 2; // top
-        }
+        } else if (fabs(round(contactpointx)) == 1 && fabs(round(contactpointy)) == -0) {
+            //left
+             collisionSide = 1; // left
+        } else if (fabs(round(contactpointx)) == -1 && fabs(round(contactpointy)) == 0) {
+            //right
+             collisionSide = 3; // right
+        } else collisionSide = 0;
     }
     
     
     
+    //for den stone und die stail
+    if (contact.getShapeA()->getBody()->getTag() == 1 and contact.getShapeB()->getBody()->getTag() == 3 and not stone_down) {
+        if (collisionSide == 1) contact.getShapeB()->getBody()->getNode()->setRotation(-90);
+        else if (collisionSide == 3)  contact.getShapeB()->getBody()->getNode()->setRotation(90);
+        stone_bit();
+    } else if (contact.getShapeB()->getBody()->getTag() == 1 and contact.getShapeA()->getBody()->getTag() == 3 and not stone_down) {
+        if (collisionSide == 1) contact.getShapeB()->getBody()->getNode()->setRotation(-90);
+        else if (collisionSide == 3)  contact.getShapeB()->getBody()->getNode()->setRotation(90);
+        stone_bit();
+    }
+
         // to winning scene
     if (collisionSide == 2) {
         if (nodeA->getName() == "snail" and nodeB->getName() == "station") {
