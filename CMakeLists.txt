@@ -123,7 +123,6 @@ if ( WIN32 )
 endif( WIN32 )
 
 set(GAME_SRC
-        Classes/helpers/json.hpp
         Classes/AppDelegate.cpp
         Classes/scenes/MainScene.cpp
         Classes/scenes/StartScene.cpp
@@ -131,11 +130,12 @@ set(GAME_SRC
         Classes/scenes/GameOverScene.cpp
         Classes/scenes/WinningScene.cpp
         Classes/helpers/ForceHandles.cpp
-        Classes/model/Highscore.h
-        Classes/scenes/HighScoreScene.cpp
+        Classes/model/Highscore.cpp
+        Classes/helpers/HighscorePopup.cpp
         ${PLATFORM_SPECIFIC_SRC} )
 
 set(GAME_HEADERS
+        Classes/helpers/json.hpp
         Classes/AppDelegate.h
         Classes/scenes/MainScene.h
         Classes/scenes/StartScene.h
@@ -144,9 +144,7 @@ set(GAME_HEADERS
         Classes/scenes/WinningScene.h
         Classes/helpers/ForceHandles.h
         Classes/model/Highscore.h
-        Classes/scenes/HighScoreScene.h
-  ${PLATFORM_SPECIFIC_HEADERS}
-        )
+  ${PLATFORM_SPECIFIC_HEADERS}Classes/helpers/HighscorePopup.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

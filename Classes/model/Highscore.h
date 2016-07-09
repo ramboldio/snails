@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include "cocos2d.h"
-#include "../helpers/json.hpp"
 
 #define SCORE_KEY "highscore_table"
 

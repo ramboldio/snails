@@ -1,6 +1,11 @@
 
 #include "Highscore.h"
 
+// json lib https://github.com/nlohmann/json
+#include "../helpers/json.hpp"
+using json = nlohmann::json;
+
+
 
 Highscore::Highscore() {
     _storage = cocos2d::UserDefault::getInstance();
@@ -11,7 +16,7 @@ Highscore::Highscore() {
     _scoreboard->push_back({"Lukas", 651});
 }
 
-void Highscore::add(Highscore::entry newItem) {
+void Highscore::add(entry newItem) {
     // create iterator
     std::list<entry>::iterator it;
 
@@ -30,13 +35,14 @@ void Highscore::add(std::string name, int score) {
 }
 
 void Highscore::loadFromStorage() {
-    auto j_list = json::parse(_storage->getStringForKey(SCORE_KEY));
-    _scoreboard = j_list[0];
+    auto json = json::parse(_storage->getStringForKey(SCORE_KEY));
+    // _scoreboard = json.at(0);
+    // TODO properly parse json string to list
 }
 
 void Highscore::writeToStorage() {
-    json j = j_list(_scoreboard);
-    _storage->setStringForKey(SCORE_KEY, j.dump());
+    json j_list(_scoreboard);
+    _storage->setStringForKey(SCORE_KEY, j_list.dump());
 }
 
 void Highscore::clear() {
