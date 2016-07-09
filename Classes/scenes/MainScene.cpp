@@ -144,7 +144,7 @@ bool MainScene::init() {
     //      space background
     auto space = Sprite::create("res/space_bg.png");
     space->setScale(1.2);
-    space->setPosition(Vec2(visibleSize.width/2  + origin.x, 200));
+    space->setPosition(Vec2(visibleSize.width/2  + origin.x, 700));
     game_layer->addChild(space);
     
     //      sun
@@ -382,8 +382,6 @@ void MainScene::update(float dt) {
         stone_ground = true;
         stone->getPhysicsBody()->setRotationEnable(true);
     }
-    
-    log("pos %f", stone->getRotation());
     
     if (stone->getRotation() > 90 or stone->getRotation() < -90) {
         stone->getPhysicsBody()->setRotationEnable(false);
