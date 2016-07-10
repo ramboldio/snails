@@ -10,12 +10,13 @@ using json = nlohmann::json;
 Highscore::Highscore() {
     _storage = cocos2d::UserDefault::getInstance();
     _scoreboard = new std::list<entry>();
-    loadFromStorage();
 
     // sample set
-    add({"test23", 921});
-    add({"Lukas", 651});
-    add("middleMan", 700);
+    // add({"test23", 921});
+    // add({"Lukas", 651});
+    // add("middleMan", 700);
+
+    loadFromStorage();
 }
 
 void Highscore::add(entry newItem) {
@@ -44,14 +45,18 @@ void Highscore::add(std::string name, int score) {
 }
 
 void Highscore::loadFromStorage() {
+    _scoreboard->clear();
+
     try {
         auto response = json::parse(_storage->getStringForKey(SCORE_KEY));
         // std::cout << json.dump(4) << std::endl;
         // _scoreboard = json.at(0);
         // TODO properly parse json string to list
-        for (json::iterator it = response.begin(); it != response.end(); ++it) {
-            std::cout << it.key() << " : " << it.value() << "\n";
+        for (int i = 0; i < response.size(); ++i) {
+            json e = response.at(i);
+            _scoreboard->push_back({e["name"], e["score"]});
         }
+
     } catch (const std::exception e){
         log("Could not load Highscores from local storage!");
     }
