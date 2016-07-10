@@ -23,7 +23,7 @@ public:
 
     void clear();
 
-    std::list<entry> getList();
+    std::list<entry>* getList();
 
 private:
 
