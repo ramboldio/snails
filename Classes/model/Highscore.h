@@ -4,30 +4,37 @@
 
 #include <stdio.h>
 #include "cocos2d.h"
-#include "../helpers/json.hpp"
 
+#define SCORE_KEY "highscore_table"
 
 using namespace cocos2d;
 
+struct entry {
+    std::string name; int score;
+};
+
 class Highscore : public Layer {
 
-    Highscore();
 
-    struct entry {
-        std::string name, int score;
-    };
-
-    std::list<entry>* _scoreboard;
-    UserDefault* _storage;
-
-    void loadFromStorage();
-    void writeToStorage();
 public:
 
+    Highscore();
     void add(entry newItem);
     void add(std::string name, int score);
+
     void clear();
-    std::list<entry> getList();
+
+    std::list<entry>* getList();
+
+    static void writeSampleScores();
+
+private:
+
+    std::list<entry>* _scoreboard;
+
+    UserDefault* _storage;
+    void loadFromStorage();
+    void writeToStorage();
 };
 
 

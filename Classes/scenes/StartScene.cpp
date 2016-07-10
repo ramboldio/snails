@@ -39,7 +39,11 @@ bool StartScene::init() {
     menu->setPosition(Point::ZERO);
     
     this->addChild(menu);
-    
+
+
+    HighscorePopup* _hud = HighscorePopup::createPopup();
+    this->addChild(_hud, 2);
+
     return true;
 
 }

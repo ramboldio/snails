@@ -2,6 +2,7 @@
 #define __START_SCENE_H__
 
 #include "cocos2d.h"
+#include "../helpers/HighscorePopup.h"
 
 class StartScene : public cocos2d::Layer
 {

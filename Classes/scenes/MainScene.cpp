@@ -366,7 +366,7 @@ void MainScene::update(float dt) {
     
     if (not tree_state) changeTreePhBody();
     
-    //TODO change when jump finished -> check if last jump successfull
+    //TODO change when jump finished -> check if last jump successful
     if (jumps == 0 && !_snail->air_state) {
         auto scene = GameOverScene::createScene();
         Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
@@ -591,7 +591,7 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
 }
 
 void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event) {
-    
+    // TODO only jump if snail is currently on the ground
             if(_touch_start!=_touch_stop && _touch_start!=Vec2(-1,-1) && _touch_stop!=Vec2(-1,-1)&&_snail->ground_state){
                 //TODO Bugfix Overdosed first shot
                 //_force.scale(10);//For testing higher sail weight.
