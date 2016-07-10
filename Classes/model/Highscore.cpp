@@ -3,9 +3,9 @@
 
 // json lib https://github.com/nlohmann/json
 #include "../helpers/json.hpp"
+#include <ctime>
+
 using json = nlohmann::json;
-
-
 
 Highscore::Highscore() {
     _storage = cocos2d::UserDefault::getInstance();
@@ -15,6 +15,13 @@ Highscore::Highscore() {
 
 void Highscore::add(entry newItem) {
     // TODO limit list length
+
+    // set timestamp as name
+    time_t now = time(0);   // get time now
+
+    // TODO make time more pretty
+    newItem.name = std::asctime(std::localtime(&now));
+
     // create iterator
     std::list<entry>::iterator it;
 
