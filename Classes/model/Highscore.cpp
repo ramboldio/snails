@@ -11,11 +11,6 @@ Highscore::Highscore() {
     _storage = cocos2d::UserDefault::getInstance();
     _scoreboard = new std::list<entry>();
 
-    // sample set
-    // add({"test23", 921});
-    // add({"Lukas", 651});
-    // add("middleMan", 700);
-
     loadFromStorage();
 }
 
@@ -82,3 +77,13 @@ void Highscore::clear() {
 std::list<entry>* Highscore::getList() {
     return _scoreboard;
 }
+
+void Highscore::writeSampleScores() {
+    Highscore* h = new Highscore();
+    h->clear();
+    h->add({"test23", 921});
+    h->add({"Lukas", 651});
+    h->add("middleMan", 700);
+}
+
+

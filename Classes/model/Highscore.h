@@ -20,16 +20,17 @@ public:
 
     Highscore();
     void add(entry newItem);
+    void add(std::string name, int score);
 
     void clear();
 
     std::list<entry>* getList();
 
+    static void writeSampleScores();
+
 private:
 
     std::list<entry>* _scoreboard;
-
-    void add(std::string name, int score);
 
     UserDefault* _storage;
     void loadFromStorage();
