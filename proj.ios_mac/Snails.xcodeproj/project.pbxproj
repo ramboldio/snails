@@ -69,6 +69,19 @@
 		52B47A471A53D09C004E4C60 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B47A461A53D09B004E4C60 /* Security.framework */; };
 		8262943E1AAF051F00CB7CF7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8262943D1AAF051F00CB7CF7 /* Security.framework */; };
 		886719FD1D18084B000E7410 /* AppDelegate.h in Sources */ = {isa = PBXBuildFile; fileRef = 46880B8519C43A87006E1F66 /* AppDelegate.h */; };
+		886EB1521D32A5330077F356 /* Highscore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 886EB1501D32A5330077F356 /* Highscore.cpp */; };
+		886EB1541D32A5400077F356 /* Snail.h in Sources */ = {isa = PBXBuildFile; fileRef = 17609D721D2E9800003FF1D8 /* Snail.h */; };
+		886EB1551D32A5400077F356 /* Highscore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 886EB1501D32A5330077F356 /* Highscore.cpp */; };
+		886EB1561D32A5400077F356 /* Highscore.h in Sources */ = {isa = PBXBuildFile; fileRef = 886EB1511D32A5330077F356 /* Highscore.h */; };
+		886EB1571D32A5400077F356 /* ForceHandles.h in Sources */ = {isa = PBXBuildFile; fileRef = 17609D771D2E9811003FF1D8 /* ForceHandles.h */; };
+		886EB1581D32A5400077F356 /* MainScene.h in Sources */ = {isa = PBXBuildFile; fileRef = 17609D851D2E9AF4003FF1D8 /* MainScene.h */; };
+		886EB1591D32A5400077F356 /* GameOverScene.h in Sources */ = {isa = PBXBuildFile; fileRef = 17609D661D2E97EA003FF1D8 /* GameOverScene.h */; };
+		886EB15A1D32A5400077F356 /* StartScene.h in Sources */ = {isa = PBXBuildFile; fileRef = 17609D681D2E97EA003FF1D8 /* StartScene.h */; };
+		886EB15B1D32A5400077F356 /* WinningScene.h in Sources */ = {isa = PBXBuildFile; fileRef = 17609D6A1D2E97EA003FF1D8 /* WinningScene.h */; };
+		886EB15F1D32A7D30077F356 /* HighscorePopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 886EB15C1D32A7D30077F356 /* HighscorePopup.cpp */; };
+		886EB1601D32A7DA0077F356 /* HighscorePopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 886EB15C1D32A7D30077F356 /* HighscorePopup.cpp */; };
+		886EB1611D32A7DA0077F356 /* HighscorePopup.h in Sources */ = {isa = PBXBuildFile; fileRef = 886EB15D1D32A7D30077F356 /* HighscorePopup.h */; };
+		886EB1621D32A7DA0077F356 /* json.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 886EB15E1D32A7D30077F356 /* json.hpp */; };
 		88AA20941D32131D008E43B9 /* sound in Resources */ = {isa = PBXBuildFile; fileRef = 88AA20931D32131D008E43B9 /* sound */; };
 		88AA20961D321324008E43B9 /* sound in Resources */ = {isa = PBXBuildFile; fileRef = 88AA20931D32131D008E43B9 /* sound */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
@@ -181,6 +194,11 @@
 		521A8EA819F11F5000D177D7 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		52B47A461A53D09B004E4C60 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		886EB1501D32A5330077F356 /* Highscore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Highscore.cpp; path = model/Highscore.cpp; sourceTree = "<group>"; };
+		886EB1511D32A5330077F356 /* Highscore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Highscore.h; path = model/Highscore.h; sourceTree = "<group>"; };
+		886EB15C1D32A7D30077F356 /* HighscorePopup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HighscorePopup.cpp; path = helpers/HighscorePopup.cpp; sourceTree = "<group>"; };
+		886EB15D1D32A7D30077F356 /* HighscorePopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HighscorePopup.h; path = helpers/HighscorePopup.h; sourceTree = "<group>"; };
+		886EB15E1D32A7D30077F356 /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = json.hpp; path = helpers/json.hpp; sourceTree = "<group>"; };
 		88AA20931D32131D008E43B9 /* sound */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sound; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -278,6 +296,11 @@
 		17609D751D2E9804003FF1D8 /* helpers */ = {
 			isa = PBXGroup;
 			children = (
+				886EB15C1D32A7D30077F356 /* HighscorePopup.cpp */,
+				886EB15D1D32A7D30077F356 /* HighscorePopup.h */,
+				886EB15E1D32A7D30077F356 /* json.hpp */,
+				886EB1501D32A5330077F356 /* Highscore.cpp */,
+				886EB1511D32A5330077F356 /* Highscore.h */,
 				17609D761D2E9811003FF1D8 /* ForceHandles.cpp */,
 				17609D771D2E9811003FF1D8 /* ForceHandles.h */,
 			);
@@ -572,8 +595,10 @@
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				17609D6B1D2E97EA003FF1D8 /* GameOverScene.cpp in Sources */,
+				886EB1521D32A5330077F356 /* Highscore.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				17609D731D2E9800003FF1D8 /* Snail.cpp in Sources */,
+				886EB15F1D32A7D30077F356 /* HighscorePopup.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,6 +606,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				886EB1601D32A7DA0077F356 /* HighscorePopup.cpp in Sources */,
+				886EB1611D32A7DA0077F356 /* HighscorePopup.h in Sources */,
+				886EB1621D32A7DA0077F356 /* json.hpp in Sources */,
+				886EB1541D32A5400077F356 /* Snail.h in Sources */,
+				886EB1551D32A5400077F356 /* Highscore.cpp in Sources */,
+				886EB1561D32A5400077F356 /* Highscore.h in Sources */,
+				886EB1571D32A5400077F356 /* ForceHandles.h in Sources */,
+				886EB1581D32A5400077F356 /* MainScene.h in Sources */,
+				886EB1591D32A5400077F356 /* GameOverScene.h in Sources */,
+				886EB15A1D32A5400077F356 /* StartScene.h in Sources */,
+				886EB15B1D32A5400077F356 /* WinningScene.h in Sources */,
 				886719FD1D18084B000E7410 /* AppDelegate.h in Sources */,
 				17609D6E1D2E97EA003FF1D8 /* StartScene.cpp in Sources */,
 				17609D741D2E9800003FF1D8 /* Snail.cpp in Sources */,

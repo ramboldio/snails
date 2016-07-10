@@ -8,7 +8,7 @@
 #define HELPING_FORCE Vec2(1000,2000)
 #define CUSTOM_GRAVITY Vec2(0.0f, -350.0f)
 
-#include <model/Highscore.h>
+#include "../model/Highscore.h"
 #include "../helpers/ForceHandles.h"
 #include "cocos2d.h"
 #include "SimpleAudioEngine.h" 
