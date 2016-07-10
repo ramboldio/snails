@@ -10,11 +10,11 @@ using json = nlohmann::json;
 Highscore::Highscore() {
     _storage = cocos2d::UserDefault::getInstance();
     _scoreboard = new std::list<entry>();
-
     loadFromStorage();
 }
 
 void Highscore::add(entry newItem) {
+    // TODO limit list length
     // create iterator
     std::list<entry>::iterator it;
 
@@ -30,9 +30,6 @@ void Highscore::add(entry newItem) {
         _scoreboard->push_back(newItem);
     }
     writeToStorage();
-
-    // TODO remove test
-    loadFromStorage();
 }
 
 void Highscore::add(std::string name, int score) {
@@ -44,8 +41,6 @@ void Highscore::loadFromStorage() {
 
     try {
         auto response = json::parse(_storage->getStringForKey(SCORE_KEY));
-        // std::cout << json.dump(4) << std::endl;
-        // _scoreboard = json.at(0);
         // TODO properly parse json string to list
         for (int i = 0; i < response.size(); ++i) {
             json e = response.at(i);
@@ -85,5 +80,3 @@ void Highscore::writeSampleScores() {
     h->add({"Lukas", 651});
     h->add("middleMan", 700);
 }
-
-

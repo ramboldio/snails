@@ -2,6 +2,7 @@
 // Created by lukas on 08.07.16.
 //
 
+#include <ui/UIButton.h>
 #include "HighscorePopup.h"
 
 
@@ -28,14 +29,22 @@ void HighscorePopup::drawPopup()
 {
     _messageLabel = Label::createWithTTF("HIGHSCORES", "fonts/Pixel LCD-7.ttf", 32);
     _messageLabel->setColor(cocos2d::Color3B(255, 215, 0));
-    _messageLabel->setPosition(Vec2(Director::getInstance()->getVisibleSize().width / 2,
-                                             Director::getInstance()->getVisibleSize().height - _heading_margin_top));
-    addChild(_messageLabel, 1);
+    _messageLabel->setPosition(Vec2(
+            _popup_size.x / 2,
+            _popup_size.y - _heading_margin_top
+    ));
+    // addChild(_messageLabel, 1);
 
     Sprite* background = Sprite::create("res/highscore_background.png");
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    background->setPosition( Point( _popup_size.x / 2 + origin.x, _popup_size.y / 2 + origin.y -100) );
+
+    background->setScale(0.4);
     addChild(background);
 
     drawEntries();
+
+    initBackButton();
 }
 
 
@@ -60,7 +69,8 @@ void HighscorePopup::drawEntry(int pos, std::string &name, int &score) {
     Label* nameLabel = Label::createWithTTF(std::to_string(pos +1) + ". " + name, "fonts/Pixel LCD-7.ttf", 32);
     nameLabel->setAnchorPoint(Vec2(0.0f,0.5f)); // left align
     nameLabel->setColor(cocos2d::Color3B(255, 215, 0));
-    nameLabel->setPosition(Vec2(_table_margin_left, Director::getInstance()->getVisibleSize().height - _table_margin_top  - _entry_margin_top * pos));
+    nameLabel->setPosition(Vec2(_table_margin_left, _popup_size.y - _table_margin_top - _entry_margin_top * pos));
+
     addChild(nameLabel, 1);
 
     std::string sscore = std::to_string(score);
@@ -74,4 +84,24 @@ void HighscorePopup::drawEntry(int pos, std::string &name, int &score) {
     addChild(scoreLabel, 1);
 
 }
+
+void HighscorePopup::initBackButton() {
+    auto btn = ui::Button::create("res/back_button.png", "res/back_button_clicked.png");
+    btn->setScale(0.4);
+    btn->setPosition(Vec2(
+            _popup_size.x / 2,
+            100
+    ));
+    btn->addClickEventListener( CC_CALLBACK_1(HighscorePopup::BackButtonCallback, this) );
+    // _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    addChild(btn, 1);
+}
+
+void HighscorePopup::close() {
+    this->removeFromParentAndCleanup(true);
+}
+
+
+
+
 

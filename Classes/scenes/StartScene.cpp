@@ -10,8 +10,11 @@ Scene* StartScene::createScene() {
     auto scene = Scene::create();
     auto layer = StartScene::create();
     
-    scene->addChild(layer);
-    
+    scene->addChild(layer, 1);
+
+    HighscorePopup* _hud = HighscorePopup::createPopup();
+    scene->addChild(_hud, 2);
+
     return scene;
 }
 
@@ -41,8 +44,7 @@ bool StartScene::init() {
     this->addChild(menu);
 
 
-    HighscorePopup* _hud = HighscorePopup::createPopup();
-    this->addChild(_hud, 2);
+
 
     return true;
 

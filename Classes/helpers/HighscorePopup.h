@@ -18,6 +18,7 @@ public:
     static HighscorePopup *createPopup();
 
     void drawPopup();
+    void close();
 
     virtual void draw (cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform,
                        bool transformUpdated);
@@ -33,6 +34,8 @@ private:
     int _table_margin_left = 250;
     int _entry_margin_top = 50;
 
+    Vec2 _popup_size = Director::getInstance()->getVisibleSize();
+
     void drawTableHeader();
     void drawEntries();
 
@@ -40,6 +43,9 @@ private:
     void drawEntry(int pos, std::string &name, int &score);
 
     void initBackButton();
+    void BackButtonCallback(Ref *pSender) {
+        this->close();
+    }
 
 };
 
