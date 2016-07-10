@@ -10,6 +10,7 @@
 
 #include "../helpers/ForceHandles.h"
 #include "cocos2d.h"
+#include "SimpleAudioEngine.h" 
 #include "../model/Snail.h"
 
 using namespace cocos2d;

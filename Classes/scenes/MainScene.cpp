@@ -28,6 +28,9 @@ bool stone_down = false;
 bool tree_state = true;
 bool stone_ground = false;
 
+auto audio =  CocosDenshion::SimpleAudioEngine::getInstance();
+int idsound;
+
 Scene* MainScene::createScene() {
 
     auto main_scene = Scene::createWithPhysics();
@@ -351,6 +354,8 @@ void MainScene::update(float dt) {
         _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
         _snail->base = false;
         _snail->air_state = true;
+        
+        idsound = audio->playEffect("sound/ufo-landing.wav", false, 1.0f, 1.0f, 1.0f);
     }
     
     if(_snail->ground_state and not _snail->base) {
@@ -374,6 +379,8 @@ void MainScene::update(float dt) {
         _snail->getSprite()->getPhysicsBody()->setVelocity(Vec2(0,0));
         _snail->getSprite()->getPhysicsBody()->resetForces();
         //_snail->getSprite()->getPhysicsBody()->applyForce(Vec2(0,-1000));
+        
+        audio->playEffect("sound/space-sound-landing-with-distortion.wav", false, 1.0f, 1.0f, 1.0f);
     }
     
     
@@ -394,6 +401,7 @@ void MainScene::update(float dt) {
 
 
 void stone_bit() {
+    audio->playEffect("sound/kick-hard-8-bit.wav", false, 1.0f, 1.0f, 1.0f);
     stone->getPhysicsBody()->setMass(100);
     stone->getPhysicsBody()->setDynamic(false);
     stone->getPhysicsBody()->setGravityEnable(false);
@@ -412,6 +420,8 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
         
         // ground, tree and snail with ContactTestBitmask(0xFFFFFFFFF)
         _snail->ground_state = true;
+        audio->stopEffect(idsound);
+        
         _snail->air_state = false;
         
         if (nodeA->getName() == "tree" and nodeB->getName() == "snail" and tree_state) {
@@ -419,11 +429,13 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             spriteAction("tree", nodeA, 4, false, 0.1, 0);
             score += 1;
             glibberFlag = 1;
+            audio->playEffect("sound/splat-and-crunch.wav", false, 1.0f, 1.0f, 1.0f);
         } else if (nodeB->getName() == "tree" and nodeA->getName() == "snail" and tree_state) {
             tree_state = false;
             spriteAction("tree", nodeB, 4, false, 0.1, 0);
             score += 1;
             glibberFlag = 1;
+            audio->playEffect("sound/splat-and-crunch.wav", false, 1.0f, 1.0f, 1.0f);
         }
         
         if (fabs(round(contactpointx)) == 0 && fabs(round(contactpointy)) == 1) {
@@ -579,6 +591,7 @@ void MainScene::onTouchesMoved(const std::vector<Touch*> &touches, Event* event)
 }
 
 void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event) {
+    
             if(_touch_start!=_touch_stop && _touch_start!=Vec2(-1,-1) && _touch_stop!=Vec2(-1,-1)&&_snail->ground_state){
                 //TODO Bugfix Overdosed first shot
                 //_force.scale(10);//For testing higher sail weight.
@@ -600,7 +613,9 @@ void MainScene::onTouchesEnded(const std::vector<Touch*> &touches, Event* event)
                 //For Testing
                 log("Force: (%f,%f)",_force.x,_force.y);
                 log("Delta: (%f,%f)",_delta.x,_delta.y);
-
+                
+                audio->playEffect("sound/videogame-jump.wav", false, 1.0f, 1.0f, 1.0f);
+                
                 _handles->clearHandles();
             }
 }
