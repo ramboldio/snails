@@ -19,8 +19,8 @@ HighscorePopup *HighscorePopup::createPopup() {
 
     a->setContentSize(Size(1, 1));
     a->setAnchorPoint(Vec2(0, 0));
-
     a->drawPopup();
+
 
     return a;
 }
@@ -37,9 +37,9 @@ void HighscorePopup::drawPopup()
 
     Sprite* background = Sprite::create("res/highscore_background.png");
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    background->setPosition( Point( _popup_size.x / 2 + origin.x, _popup_size.y / 2 + origin.y -100) );
+    background->setPosition( Point( _popup_size.x / 2 + origin.x, _popup_size.y / 2 + origin.y) );
 
-    background->setScale(0.4);
+    background->setScale(0.4, 0.35);
     addChild(background);
 
     drawEntries();

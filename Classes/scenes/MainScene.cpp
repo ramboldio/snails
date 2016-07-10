@@ -29,6 +29,7 @@ bool tree_state = true;
 bool stone_ground = false;
 
 auto audio =  CocosDenshion::SimpleAudioEngine::getInstance();
+
 int idsound;
 
 Scene* MainScene::createScene() {
@@ -628,6 +629,9 @@ void MainScene::goToGameOverScene(Ref *sender) {
 }
 
 void MainScene::goToWinningScene(Ref *sender) {
+    // Save HighScore
+    _highscore->add("Lukas", score);
+
     this->cleanup();
     auto scene = WinningScene::createScene();
     Director::getInstance()->replaceScene( TransitionFade::create(TRANSITION_TIME, scene) );

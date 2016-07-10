@@ -8,6 +8,7 @@
 #define HELPING_FORCE Vec2(1000,2000)
 #define CUSTOM_GRAVITY Vec2(0.0f, -350.0f)
 
+#include <model/Highscore.h>
 #include "../helpers/ForceHandles.h"
 #include "cocos2d.h"
 #include "SimpleAudioEngine.h" 
@@ -35,6 +36,8 @@ class MainScene : public Layer
     ForceHandles* _handles;
     int glibberFlag;
 
+    Highscore* _highscore = new Highscore();
+
 public:
     MainScene();
     virtual ~MainScene();
@@ -49,6 +52,7 @@ public:
     void createSnail();
     void goToGameOverScene(Ref *sender);
     void goToWinningScene(Ref *sender);
+
 
     void onTouchesBegan(const std::vector<Touch*> &touches, cocos2d::Event* event);
     void onTouchesMoved(const std::vector<Touch*> &touches, cocos2d::Event* event);
