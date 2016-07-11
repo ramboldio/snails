@@ -17,11 +17,14 @@ void Highscore::add(entry newItem) {
     // TODO limit list length
 
     // set timestamp as name
-    time_t now = time(0);   // get time now
+    time_t now = time(NULL);   // get time now
 
     // TODO make time more pretty
-    newItem.name = std::asctime(std::localtime(&now));
-
+    char mbstr[100];
+    std::strftime(mbstr, sizeof(mbstr), "%d-%m-%Y %H:%M", std::localtime(&now));
+    
+    newItem.name = mbstr;
+    
     // create iterator
     std::list<entry>::iterator it;
 

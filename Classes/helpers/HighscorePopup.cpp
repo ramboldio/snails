@@ -66,7 +66,7 @@ void HighscorePopup::drawEntries() {
 }
 
 void HighscorePopup::drawEntry(int pos, std::string &name, int &score) {
-    Label* nameLabel = Label::createWithTTF(std::to_string(pos +1) + ". " + name, "fonts/Pixel LCD-7.ttf", 32);
+    Label* nameLabel = Label::createWithTTF(std::to_string(pos +1) + ". " + name, "fonts/Pixel LCD-7.ttf", 18);
     nameLabel->setAnchorPoint(Vec2(0.0f,0.5f)); // left align
     nameLabel->setColor(cocos2d::Color3B(255, 215, 0));
     nameLabel->setPosition(Vec2(_table_margin_left, _popup_size.y - _table_margin_top - _entry_margin_top * pos));
@@ -74,7 +74,7 @@ void HighscorePopup::drawEntry(int pos, std::string &name, int &score) {
     addChild(nameLabel, 1);
 
     std::string sscore = std::to_string(score);
-    Label* scoreLabel = Label::createWithTTF(sscore, "fonts/Pixel LCD-7.ttf", 32);
+    Label* scoreLabel = Label::createWithTTF(sscore, "fonts/Pixel LCD-7.ttf", 18);
     scoreLabel->setAnchorPoint(Vec2(1.0f,0.5f)); // right align
     scoreLabel->setColor(cocos2d::Color3B(255, 255, 255));
     scoreLabel->setPosition(Vec2(
