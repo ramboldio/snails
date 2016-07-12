@@ -12,7 +12,7 @@ USING_NS_CC;
 
 using namespace std;
 
-Label* label_score, * label_jumps;
+Label* label_score, * label_jumps, * health_label;
 
 Node* game_layer;
 Node* menu_layer;
@@ -53,9 +53,11 @@ char* set_label(int flag, int _score){
     if (flag == 1) {
         sprintf(text, "Score: %d", _score);
         return text;
-    }
-    if (flag == 2) {
+    } else if (flag == 2) {
         sprintf(text, "Jumps: %d", _score);
+        return text;
+    } else if (flag == 3) {
+        sprintf(text, "Health: %d", _score);
         return text;
     }
     return " ";
@@ -133,11 +135,11 @@ bool MainScene::init() {
     closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2, origin.y + closeItem->getContentSize().height/2));
     menu_layer->addChild(closeItem, 3); */
     
-    label_score = Label::createWithTTF(set_label(1, score), "fonts/Pixel LCD-7.ttf", 32);
+    label_score = Label::createWithTTF(set_label(1, score), "fonts/Pixel LCD-7.ttf", 20);
     label_score->setPosition(Vec2(label_score->getContentSize().width,
                                   visibleSize.height - label_score->getContentSize().height));
     
-    label_jumps = Label::createWithTTF(set_label(2, jumps), "fonts/Pixel LCD-7.ttf", 32);
+    label_jumps = Label::createWithTTF(set_label(2, jumps), "fonts/Pixel LCD-7.ttf", 20);
     label_jumps->setPosition(Vec2(label_score->getContentSize().width,
                                  label_score->getPosition().y - label_jumps->getContentSize().height));
     
@@ -171,6 +173,11 @@ bool MainScene::init() {
     //  COLLIDE OBJECTS
     //      snail
     createSnail();
+    health_label = Label::createWithTTF(set_label(2, _snail->getHealth()), "fonts/Pixel LCD-7.ttf", 20);
+    health_label->setColor(Color3B(0, 255, 0));
+    health_label->setPosition(Vec2(label_score->getContentSize().width,
+                                   label_jumps->getPosition().y - health_label->getContentSize().height));
+    menu_layer->addChild(health_label, 3);
     
     //      tree
     tree = Sprite::createWithSpriteFrameName("tree_1.png");
@@ -347,8 +354,9 @@ void changeTreePhBody() {
 void MainScene::update(float dt) {
    
     //score = abs(game_layer->getPosition().x);
-    label_score->setString( set_label(1, score));
+    label_score->setString(set_label(1, score));
     label_jumps->setString(set_label(2, jumps));
+    health_label->setString(set_label(3, _snail->getHealth()));
     
     if (not _snail->air_state and _snail->getSprite()->getPhysicsBody()->getVelocity().y < 0) {
         _snail->getSprite()->setTexture("res/norm/snail_lands.png");
@@ -373,6 +381,11 @@ void MainScene::update(float dt) {
         Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
     }
     
+    if(_snail->getHealth() == 0) {
+        auto scene = GameOverScene::createScene();
+        Director::getInstance( )->replaceScene( TransitionFade::create( TRANSITION_TIME, scene ) );
+    }
+    
     if(_snail->getSprite()->getPhysicsBody()->getPosition().x>2*_screenSize.height||_snail->getSprite()->getPhysicsBody()->getPosition().y>2*_screenSize.width){
         //
         _snail->getSprite()->getPhysicsBody()->resetForces();
@@ -380,7 +393,8 @@ void MainScene::update(float dt) {
         _snail->getSprite()->getPhysicsBody()->setVelocity(Vec2(0,0));
         _snail->getSprite()->getPhysicsBody()->resetForces();
         //_snail->getSprite()->getPhysicsBody()->applyForce(Vec2(0,-1000));
-        
+        _snail->setHealth(_snail->getHealth()-1);
+        health_label->setColor(Color3B(255, 0, 0));
         audio->playEffect("sound/space-sound-landing-with-distortion.wav", false, 1.0f, 1.0f, 1.0f);
     }
     
@@ -402,6 +416,7 @@ void MainScene::update(float dt) {
 
 
 void stone_bit() {
+    health_label->setColor(Color3B(255, 0, 0));
     audio->playEffect("sound/kick-hard-8-bit.wav", false, 1.0f, 1.0f, 1.0f);
     stone->getPhysicsBody()->setMass(100);
     stone->getPhysicsBody()->setDynamic(false);
@@ -456,10 +471,12 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
     if (contact.getShapeA()->getBody()->getTag() == 1 and contact.getShapeB()->getBody()->getTag() == 3 and not stone_down) {
         if (collisionSide == 1) contact.getShapeB()->getBody()->getNode()->setRotation(-90);
         else if (collisionSide == 3)  contact.getShapeB()->getBody()->getNode()->setRotation(90);
+        _snail->setHealth(_snail->getHealth()-1);
         stone_bit();
     } else if (contact.getShapeB()->getBody()->getTag() == 1 and contact.getShapeA()->getBody()->getTag() == 3 and not stone_down) {
         if (collisionSide == 1) contact.getShapeB()->getBody()->getNode()->setRotation(-90);
         else if (collisionSide == 3)  contact.getShapeB()->getBody()->getNode()->setRotation(90);
+        _snail->setHealth(_snail->getHealth()-1);
         stone_bit();
     }
 
@@ -468,7 +485,7 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
         if (nodeA->getName() == "snail" and nodeB->getName() == "station") {
             goToWinningScene(this);
         } else if (nodeB->getName() == "snail" and nodeA->getName() == "station") {
-            goToWinningScene(this);
+            health_label->setColor(Color3B(0, 255, 0));
         }
     } 
     
