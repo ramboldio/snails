@@ -36,6 +36,14 @@ auto audio =  CocosDenshion::SimpleAudioEngine::getInstance();
 
 int idsound;
 
+Vec2 rand_pos(int min_x, int max_x, int min_y, int max_y) {
+    int rand_pos_x = min_x + (rand() % (int)(max_x - min_x + 1));
+    int rand_pos_y = min_y + (rand() % (int)(max_y - min_y + 1));
+    
+    return Vec2(rand_pos_x, rand_pos_y);
+}
+
+
 Scene* MainScene::createScene() {
 
     auto main_scene = Scene::createWithPhysics();
@@ -100,6 +108,8 @@ bool MainScene::init() {
     
     score = 0;
     glibberFlag = 0;
+    stone_down = false;
+    
     if ( !Layer::init() ) {
         return false;
     }
@@ -175,6 +185,9 @@ bool MainScene::init() {
     
     
     //  COLLIDE OBJECTS
+    float inv_rand_max = (float)1/RAND_MAX;
+    float fval = rand();
+    
     //      snail
     createSnail();
     health_label = Label::createWithTTF(set_label(2, _snail->getHealth()), "fonts/Pixel LCD-7.ttf", 20);
@@ -185,22 +198,32 @@ bool MainScene::init() {
     
     //      tree
     tree = Sprite::createWithSpriteFrameName("tree_1.png");
-    tree->setScale(0.5);
+    float rand_tree_size = fval*inv_rand_max*0.5 + 0.5;
+    tree->setScale(rand_tree_size);
     auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
                                                 tree->getContentSize().height),
                                            PhysicsMaterial(1.0f, 20.0f, 0.0f));
     treeBody->setContactTestBitmask(0xFFFFFFFFF);
     treeBody->setDynamic(false);
+    treeBody->setTag(2);
     tree->setPhysicsBody(treeBody);
     tree->setName("tree");
-    tree->setPosition(_center.x + 200, 250);
+    tree->setTag(2);
+    Vec2 tree_pos = rand_pos(_center.x-500, 1250, 250, 250);
+    tree->setPosition(tree_pos);
     tree_state = true;
     spritebatch->addChild(tree);
 
     
     //stone
     stone = Sprite::createWithSpriteFrameName("stone_1.png");
-    stone->setScale(0.8);
+    float rand_stone_size = fval*inv_rand_max*0.8 + 0.4;
+   
+    stone->setScale(rand_stone_size);
+    Vec2 stone_rand_pos = rand_pos(_center.x - 700, _center.x - 50, stone->getContentSize().height*rand_stone_size,
+                                   stone->getContentSize().height*rand_stone_size);
+    stone->setPosition(stone_rand_pos);
+    
     //auto stone = Sprite::create("res/stone.png");
     //stone->setScaleX(0.1);
     //game_layer->addChild(stone);
@@ -219,10 +242,9 @@ bool MainScene::init() {
     stoneBody->setName("stone");
     stoneBody->setRotationEnable(false);
     stoneBody->setTag(3);
-    stone_ground=false;
+    stone_ground = false;
     
     stone->setPhysicsBody(stoneBody);
-    stone->setPosition(_center.x - 400, stone->getContentSize().height*0.8);
     
     /** stein -ein **/
     //stone->setAnchorPoint(Vec2(0,0));
@@ -232,7 +254,6 @@ bool MainScene::init() {
     /** stein -aus
      stone->setAnchorPoint(Vec2(stone->getPosition()+stone->getContentSize()/2));
      **/
-    log("StoneMass: %f", stoneBody->getMass());
     //stoneBody->setMass(10.0f);
 
 
@@ -246,8 +267,10 @@ bool MainScene::init() {
     stationBody->setDynamic(false);
     stationBody->setGravityEnable(false);
     stationBody->setContactTestBitmask(0xFFFFFFFFF);
+    stationBody->setTag(4);
     station->setPhysicsBody(stationBody);
     station->setPosition(1440.74, _center.y);
+    station->setTag(4);
     spritebatch->addChild(station);
     station->getPhysicsBody()->setPositionOffset(Vec2(0.0f,-station->getContentSize().height/4+15));//0.0f, -station->getContentSize().height/3
     station_way(station);
@@ -335,7 +358,7 @@ void MainScene::createSnail() {
     
     _snail = new Snail();
     _snail->getSprite()->setTexture("res/norm/snail_base.png");
-    _snail->getSprite()->setPosition(Vec2(_center.x-_screenSize.width, 156.6f)); // log("%f ", _snail->getSprite()->getPosition().y);
+    _snail->getSprite()->setPosition(Vec2(_center.x-_screenSize.width, 156.6f));
     _snail->getSprite()->setScale(0.1, 0.1);
     _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
     _snail->getSprite()->setName("snail");
@@ -350,6 +373,7 @@ void changeTreePhBody() {
                                            PhysicsMaterial(1.0f, 0.6f, 0.0f));
     treeBody->setContactTestBitmask(0xFFFFFFFFF);
     treeBody->setDynamic(false);
+    treeBody->setTag(20);
     tree->setPhysicsBody(treeBody);
     tree->setPosition(old_pos);
 }
@@ -375,12 +399,13 @@ void MainScene::update(float dt) {
         time_state -= dt;
     }
     
-    if (time_state <= 0) {
+    if (time_state <= 0 and _snail->ground_state) {
         snail_bit = false;
         time_state += 2;
+        health_label->setColor(Color3B(0, 255, 0));
         _snail->getSprite()->setTexture("res/norm/snail_base.png");
     }
-        
+    
     if(_snail->ground_state and not _snail->base) {
         if (snail_bit) {
             _snail->getSprite()->setTexture("res/norm/snail_air.png");
@@ -427,9 +452,13 @@ void MainScene::update(float dt) {
     
     if (stone->getRotation() > 90 or stone->getRotation() < -90) {
         stone->getPhysicsBody()->setEnabled(false);
-        auto newStoneBody = PhysicsBody::createBox(Size(stone->getContentSize().height,
-                                                        stone->getContentSize().width),
-                                                   PhysicsMaterial(1.0f, 0.0f, 0.0f));
+        auto newStoneBody = PhysicsBody::createBox(Size(stone->getContentSize().height-100,
+                                                        stone->getContentSize().width-100),
+                                                   PhysicsMaterial(1.0f, 0.0f, 1.0f));
+        newStoneBody->setContactTestBitmask(0xFFFFFFFFF);
+        newStoneBody->setTag(30);
+        newStoneBody->setDynamic(false);
+        
         stone->setPhysicsBody(newStoneBody);
     }
 }
@@ -460,6 +489,10 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
         audio->stopEffect(idsound);
         
         _snail->air_state = false;
+
+        
+        if ((contact.getShapeA()->getBody()->getTag() == 30 and contact.getShapeB()->getBody()->getTag() == 0) ||
+            (contact.getShapeB()->getBody()->getTag() == 30 and contact.getShapeA()->getBody()->getTag() == 0)) return false;
         
         if (nodeA->getName() == "tree" and nodeB->getName() == "snail" and tree_state) {
             tree_state = false;
@@ -485,34 +518,45 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
         } else if (fabs(round(contactpointx)) == -1 && fabs(round(contactpointy)) == 0) {
             //right
              collisionSide = 3; // right
-        } else collisionSide = 0;
-    }
-    
-    
-    
-    //for den stone und die stail
-    if (contact.getShapeA()->getBody()->getTag() == 1 and contact.getShapeB()->getBody()->getTag() == 3 and not stone_down) {
-        if (collisionSide == 1) contact.getShapeB()->getBody()->getNode()->setRotation(-90);
-        else if (collisionSide == 3)  contact.getShapeB()->getBody()->getNode()->setRotation(90);
-        _snail->setHealth(_snail->getHealth()-1);
-        _snail->getSprite()->setTexture("res/norm/snail_air.png");
-        stone_bit();
-    } else if (contact.getShapeB()->getBody()->getTag() == 1 and contact.getShapeA()->getBody()->getTag() == 3 and not stone_down) {
-        if (collisionSide == 1) contact.getShapeB()->getBody()->getNode()->setRotation(-90);
-        else if (collisionSide == 3)  contact.getShapeB()->getBody()->getNode()->setRotation(90);
-        _snail->setHealth(_snail->getHealth()-1);
-        _snail->getSprite()->setTexture("res/norm/snail_air.png");
-        stone_bit();
-    }
-
-        // to winning scene
-    if (collisionSide == 2) {
-        if (nodeA->getName() == "snail" and nodeB->getName() == "station") {
-            goToWinningScene(this);
-        } else if (nodeB->getName() == "snail" and nodeA->getName() == "station") {
-            health_label->setColor(Color3B(0, 255, 0));
         }
-    } 
+        
+       //   log("side: %d, bodyA %d bodyB %d", collisionSide, contact.getShapeA()->getBody()->getTag(), contact.getShapeB()->getBody()->getTag());
+        
+        
+        //for den stone und die stail
+        if (contact.getShapeA()->getBody()->getTag() == 1 and contact.getShapeB()->getBody()->getTag() == 3 and not stone_down) {
+            if (collisionSide == 1) contact.getShapeB()->getBody()->getNode()->setRotation(90);
+            else if (collisionSide == 3)  contact.getShapeB()->getBody()->getNode()->setRotation(-90);
+            else contact.getShapeB()->getBody()->getNode()->setRotation(90);
+            log("stone_down: %d", stone_down);
+            log ("bodyA %d", contact.getShapeA()->getBody()->getTag());
+            log ("bodyB %d", contact.getShapeB()->getBody()->getTag());
+            _snail->setHealth(_snail->getHealth()-1);
+            _snail->getSprite()->setTexture("res/norm/snail_air.png");
+            stone_bit();
+        } else if (contact.getShapeB()->getBody()->getTag() == 1 and contact.getShapeA()->getBody()->getTag() == 3 and not stone_down) {
+    
+            if (collisionSide == 1) contact.getShapeA()->getBody()->getNode()->setRotation(90);
+            else if (collisionSide == 3) contact.getShapeA()->getBody()->getNode()->setRotation(-90);
+            else contact.getShapeA()->getBody()->getNode()->setRotation(90);
+            log("collisionSide: %d", collisionSide);
+            log ("bodyA %d", contact.getShapeA()->getBody()->getTag());
+            log ("bodyB %d", contact.getShapeB()->getBody()->getTag());
+            _snail->setHealth(_snail->getHealth()-1);
+            _snail->getSprite()->setTexture("res/norm/snail_air.png");
+            stone_bit();
+        }
+    }
+    
+    
+        // to winning scene
+    if (collisionSide == 2 and contact.getShapeA()->getBody()->getTag() == 1 and contact.getShapeB()->getBody()->getTag() == 4 ) {
+            goToWinningScene(this);
+            health_label->setColor(Color3B(0, 255, 0));
+    } else if (collisionSide == 2 and contact.getShapeA()->getBody()->getTag() == 4 and contact.getShapeB()->getBody()->getTag() == 1 ) {
+        goToWinningScene(this);
+        health_label->setColor(Color3B(0, 255, 0));
+    }
     
     /*if (nodeA->getName() == "stone" and nodeB->getName() == "snail") {
         stone->getPhysicsBody()->applyForce(FALLING_FORCE);
