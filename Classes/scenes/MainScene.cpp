@@ -5,6 +5,7 @@
 #include "../scenes/GameOverScene.h"
 #include "../scenes/WinningScene.h"
 
+#define TIME_STATE 2
 #define COCOS2D_DEBUG 0
 #define TRANSITION_TIME 0.5
 
@@ -27,6 +28,9 @@ Node* stone;
 bool stone_down = false;
 bool tree_state = true;
 bool stone_ground = false;
+bool snail_bit = false;
+
+float time_state = TIME_STATE;
 
 auto audio =  CocosDenshion::SimpleAudioEngine::getInstance();
 
@@ -367,11 +371,26 @@ void MainScene::update(float dt) {
         idsound = audio->playEffect("sound/ufo-landing.wav", false, 1.0f, 1.0f, 1.0f);
     }
     
-    if(_snail->ground_state and not _snail->base) {
+    if (snail_bit) {
+        time_state -= dt;
+    }
+    
+    if (time_state <= 0) {
+        snail_bit = false;
+        time_state += 2;
         _snail->getSprite()->setTexture("res/norm/snail_base.png");
+    }
+        
+    if(_snail->ground_state and not _snail->base) {
+        if (snail_bit) {
+            _snail->getSprite()->setTexture("res/norm/snail_air.png");
+        } else {
+            _snail->getSprite()->setTexture("res/norm/snail_base.png");
+        }
         _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
         _snail->base = true;
     }
+    
     
     if (not tree_state) changeTreePhBody();
     
@@ -394,6 +413,7 @@ void MainScene::update(float dt) {
         _snail->getSprite()->getPhysicsBody()->resetForces();
         //_snail->getSprite()->getPhysicsBody()->applyForce(Vec2(0,-1000));
         _snail->setHealth(_snail->getHealth()-1);
+        snail_bit = false;
         health_label->setColor(Color3B(255, 0, 0));
         audio->playEffect("sound/space-sound-landing-with-distortion.wav", false, 1.0f, 1.0f, 1.0f);
     }
@@ -416,6 +436,7 @@ void MainScene::update(float dt) {
 
 
 void stone_bit() {
+    snail_bit = true;
     health_label->setColor(Color3B(255, 0, 0));
     audio->playEffect("sound/kick-hard-8-bit.wav", false, 1.0f, 1.0f, 1.0f);
     stone->getPhysicsBody()->setMass(100);
@@ -445,12 +466,14 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
             spriteAction("tree", nodeA, 4, false, 0.1, 0);
             score += 1;
             glibberFlag = 1;
+            snail_bit = true;
             audio->playEffect("sound/splat-and-crunch.wav", false, 1.0f, 1.0f, 1.0f);
         } else if (nodeB->getName() == "tree" and nodeA->getName() == "snail" and tree_state) {
             tree_state = false;
             spriteAction("tree", nodeB, 4, false, 0.1, 0);
             score += 1;
             glibberFlag = 1;
+            snail_bit = true;
             audio->playEffect("sound/splat-and-crunch.wav", false, 1.0f, 1.0f, 1.0f);
         }
         
@@ -472,11 +495,13 @@ bool MainScene::onContactBegin(PhysicsContact& contact) {
         if (collisionSide == 1) contact.getShapeB()->getBody()->getNode()->setRotation(-90);
         else if (collisionSide == 3)  contact.getShapeB()->getBody()->getNode()->setRotation(90);
         _snail->setHealth(_snail->getHealth()-1);
+        _snail->getSprite()->setTexture("res/norm/snail_air.png");
         stone_bit();
     } else if (contact.getShapeB()->getBody()->getTag() == 1 and contact.getShapeA()->getBody()->getTag() == 3 and not stone_down) {
         if (collisionSide == 1) contact.getShapeB()->getBody()->getNode()->setRotation(-90);
         else if (collisionSide == 3)  contact.getShapeB()->getBody()->getNode()->setRotation(90);
         _snail->setHealth(_snail->getHealth()-1);
+        _snail->getSprite()->setTexture("res/norm/snail_air.png");
         stone_bit();
     }
 
