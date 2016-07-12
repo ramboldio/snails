@@ -197,7 +197,7 @@ bool MainScene::init() {
     
     //      tree
     tree = Sprite::createWithSpriteFrameName("tree_1.png");
-    float rand_tree_size = fval*inv_rand_max*0.6 + 0.5;
+    float rand_tree_size = fval*inv_rand_max*0.5 + 0.5;
     log("point %f %f", tree->getAnchorPoint().x, tree->getAnchorPoint().y);
     tree->setAnchorPoint(Vec2(1,0));
     tree->setScale(rand_tree_size);
@@ -218,7 +218,7 @@ bool MainScene::init() {
     
     //stone
     stone = Sprite::createWithSpriteFrameName("stone_1.png");
-    float rand_stone_size = fval*inv_rand_max*0.8 + 0.4;
+    float rand_stone_size = fval*inv_rand_max*0.6 + 0.4;
    
     stone->setScale(rand_stone_size);
     Vec2 stone_rand_pos = rand_pos(_center.x - 700, _center.x - 150, stone->getContentSize().height*rand_stone_size,
