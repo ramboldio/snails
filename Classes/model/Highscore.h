@@ -35,7 +35,7 @@ private:
     UserDefault* _storage;
     void loadFromStorage();
     void writeToStorage();
-    static void trim(std::list<entry>* list, int index);
+    static std::list<entry>* trim(std::list<entry>* list, int index);
 
 };
 

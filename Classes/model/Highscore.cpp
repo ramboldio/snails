@@ -39,7 +39,7 @@ void Highscore::add(entry newItem) {
     }
 
     // delete entries which fall out of the ranking
-    trim(_scoreboard, 10);
+    _scoreboard = trim(_scoreboard, 5);
 
     writeToStorage();
 }
@@ -96,10 +96,10 @@ void Highscore::writeSampleScores() {
 
 
 // helper to cut off list
-void Highscore::trim(std::list<entry> *list, int index) {
+std::list<entry>* Highscore::trim(std::list<entry> *list, int index) {
 
     // if index is bigger than list there's no need to run the function
-    if (list->size() >= index) return;
+    if (list->size() < index) return list;
 
     std::list<entry> *newList = new std::list<entry>;
     std::list<entry>::iterator it = list->begin();
@@ -108,12 +108,11 @@ void Highscore::trim(std::list<entry> *list, int index) {
     while (it != list->end()) {
         newList->push_back({it->name, it->score});
 
-        if (i >= index){
-            list = newList;
-            return;
+        if (i >= index -1){
+            return newList;
         }
 
         i++; it++;
     }
-    return;
+    return list;
 }
