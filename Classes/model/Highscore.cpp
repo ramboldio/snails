@@ -3,7 +3,6 @@
 
 // json lib https://github.com/nlohmann/json
 #include "../helpers/json.hpp"
-#include <ctime>
 
 using json = nlohmann::json;
 
@@ -14,7 +13,6 @@ Highscore::Highscore() {
 }
 
 void Highscore::add(entry newItem) {
-    // TODO limit list length
 
     // set timestamp as name
     time_t now = time(0);   // get time now
@@ -27,7 +25,7 @@ void Highscore::add(entry newItem) {
 
     for (it=_scoreboard->begin(); it!=_scoreboard->end(); ++it) {
         // wait for position when score can be inserted
-        if (it->score < newItem.score) {
+        if (it->score >= newItem.score) {
             _scoreboard->insert(it, newItem);
             break;
         }
@@ -36,6 +34,10 @@ void Highscore::add(entry newItem) {
     if (it==_scoreboard->end()) {
         _scoreboard->push_back(newItem);
     }
+
+    // delete entries which fall out of the ranking
+    trim(_scoreboard, 10);
+
     writeToStorage();
 }
 
@@ -86,4 +88,29 @@ void Highscore::writeSampleScores() {
     h->add({"test23", 921});
     h->add({"Lukas", 651});
     h->add("middleMan", 700);
+}
+
+
+
+// helper to cut off list
+void trim(std::list* list, int index) {
+
+    // if index is bigger than list there's no need to run the function
+    if (list->size() >= index) return;
+
+    std::list* newList = new std::list<entry>;
+    std::list::iterator it = list->begin();
+    int i = 0;
+
+    while (it != list->end()) {
+        newList->push_back(it);
+
+        if (i >= index){
+            list = newList;
+            return;
+        }
+
+        i++; it++;
+    }
+    return;
 }
