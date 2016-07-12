@@ -198,6 +198,8 @@ bool MainScene::init() {
     //      tree
     tree = Sprite::createWithSpriteFrameName("tree_1.png");
     float rand_tree_size = fval*inv_rand_max*0.6 + 0.5;
+    log("point %f %f", tree->getAnchorPoint().x, tree->getAnchorPoint().y);
+    tree->setAnchorPoint(Vec2(1,0));
     tree->setScale(rand_tree_size);
     auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
                                                 tree->getContentSize().height),
@@ -208,7 +210,7 @@ bool MainScene::init() {
     tree->setPhysicsBody(treeBody);
     tree->setName("tree");
     tree->setTag(2);
-    Vec2 tree_pos = rand_pos(_center.x, 1100, 250, 250);
+    Vec2 tree_pos = rand_pos(_center.x, 1100, 120, 120);
     tree->setPosition(tree_pos);
     tree_state = true;
     spritebatch->addChild(tree);
@@ -219,7 +221,7 @@ bool MainScene::init() {
     float rand_stone_size = fval*inv_rand_max*0.8 + 0.4;
    
     stone->setScale(rand_stone_size);
-    Vec2 stone_rand_pos = rand_pos(_center.x - 700, _center.x - 50, stone->getContentSize().height*rand_stone_size,
+    Vec2 stone_rand_pos = rand_pos(_center.x - 700, _center.x - 150, stone->getContentSize().height*rand_stone_size,
                                    stone->getContentSize().height*rand_stone_size);
     stone->setPosition(stone_rand_pos);
     
@@ -384,15 +386,7 @@ void MainScene::update(float dt) {
     label_score->setString(set_label(1, score));
     label_jumps->setString(set_label(2, jumps));
     health_label->setString(set_label(3, _snail->getHealth()));
-    
-    if (not _snail->air_state and _snail->getSprite()->getPhysicsBody()->getVelocity().y < 0) {
-        _snail->getSprite()->setTexture("res/norm/snail_lands.png");
-        _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
-        _snail->base = false;
-        _snail->air_state = true;
-        
-        idsound = audio->playEffect("sound/ufo-landing.wav", false, 1.0f, 1.0f, 1.0f);
-    }
+
     
     if (snail_bit) {
         time_state -= dt;
@@ -405,6 +399,16 @@ void MainScene::update(float dt) {
         _snail->getSprite()->setTexture("res/norm/snail_base.png");
     }
     
+    if (not _snail->air_state and _snail->getSprite()->getPhysicsBody()->getVelocity().y < 0) {
+        _snail->getSprite()->setTexture("res/norm/snail_lands.png");
+        _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
+        _snail->base = false;
+        _snail->air_state = true;
+        
+        idsound = audio->playEffect("sound/ufo-landing.wav", false, 1.0f, 1.0f, 1.0f);
+    }
+    
+    
     if(_snail->ground_state and not _snail->base) {
         if (snail_bit) {
             _snail->getSprite()->setTexture("res/norm/snail_air.png");
@@ -414,7 +418,7 @@ void MainScene::update(float dt) {
         _snail->getSprite()->setPhysicsBody(createSnailBody(_snail->getSprite()));
         _snail->base = true;
     }
-    
+
     
     if (not tree_state) changeTreePhBody();
     
