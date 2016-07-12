@@ -31,17 +31,21 @@ bool GameOverScene::init() {
     
     this->addChild( backgroundSprite );
     
-    
+    Vector<MenuItem*> items;
     
     auto over_btn = MenuItemImage::create("res/tryagain.png", "res/tryagain.png", CC_CALLBACK_1(GameOverScene::goToMainScene, this) );
     over_btn->setScale(0.3);
     over_btn->setPosition(Vec2(visibleSize.width/2.7, visibleSize.height/1.2 + origin.y  - over_btn->getContentSize().height));
     
+    items.pushBack(over_btn);
+    
     auto start_btn = MenuItemImage::create("res/button_earth.png", "res/button_earth_clicked.png", CC_CALLBACK_1(GameOverScene::goToStartScene, this) );
     start_btn->setScale(0.3);
     start_btn->setPosition(Vec2(visibleSize.width - 130, visibleSize.height  - 180));
     
-    auto menu = Menu::create(start_btn, NULL);
+    items.pushBack(start_btn);
+    
+    auto menu = Menu::createWithArray(items);
     menu->setPosition(Point::ZERO);
     
     this->addChild(menu);
