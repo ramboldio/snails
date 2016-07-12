@@ -96,17 +96,17 @@ void Highscore::writeSampleScores() {
 
 
 // helper to cut off list
-void trim(std::list* list, int index) {
+void Highscore::trim(std::list<entry> *list, int index) {
 
     // if index is bigger than list there's no need to run the function
     if (list->size() >= index) return;
 
-    std::list* newList = new std::list<entry>;
-    std::list::iterator it = list->begin();
+    std::list<entry> *newList = new std::list<entry>;
+    std::list<entry>::iterator it = list->begin();
     int i = 0;
 
     while (it != list->end()) {
-        newList->push_back(it);
+        newList->push_back({it->name, it->score});
 
         if (i >= index){
             list = newList;
