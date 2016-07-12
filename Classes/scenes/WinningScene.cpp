@@ -1,5 +1,6 @@
 #include "WinningScene.h"
 #include "MainScene.h"
+#include "StartScene.h"
 #include "ui/CocosGUI.h"
 
 #define TRANSITION_TIME 0.5
@@ -32,9 +33,15 @@ bool WinningScene::init() {
     
     Vector<MenuItem*> items;
     
-    auto start_btn = MenuItemImage::create("res/button.png", "res/button_clicked.png", CC_CALLBACK_1(WinningScene::goToMainScene, this) );
-    start_btn->setScale(0.8);
-    start_btn->setPosition(Vec2(visibleSize.width/1.5, visibleSize.height/1.2 + origin.y  - start_btn->getContentSize().height));
+    auto win_btn = MenuItemImage::create("res/button.png", "res/button_clicked.png", CC_CALLBACK_1(WinningScene::goToMainScene, this) );
+    win_btn->setScale(0.8);
+    win_btn->setPosition(Vec2(visibleSize.width/1.5, visibleSize.height/1.2 + origin.y  - win_btn->getContentSize().height));
+    
+    items.pushBack(win_btn);
+    
+    auto start_btn = MenuItemImage::create("res/button_earth.png", "res/button_earth_clicked.png", CC_CALLBACK_1(WinningScene::goToStartScene, this) );
+    start_btn->setScale(0.3);
+    start_btn->setPosition(Vec2(visibleSize.width - 110, visibleSize.height  - 110));
     
     items.pushBack(start_btn);
 
@@ -65,6 +72,12 @@ void WinningScene::openHighscorePopup (Ref *sender) {
 
 void WinningScene::goToMainScene(Ref *sender) {
     auto scene = MainScene::createScene();
+    this->getScene()->cleanup();
+    Director::getInstance()->replaceScene( TransitionFade::create(TRANSITION_TIME, scene) );
+}
+
+void WinningScene::goToStartScene(Ref *sender) {
+    auto scene = StartScene::createScene();
     this->getScene()->cleanup();
     Director::getInstance()->replaceScene( TransitionFade::create(TRANSITION_TIME, scene) );
 }

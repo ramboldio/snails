@@ -15,6 +15,7 @@ public:
     
 private:
     void goToMainScene(Ref *sender);
+    void goToStartScene(Ref *sender);
     void openHighscorePopup(Ref *sender);
 };
 

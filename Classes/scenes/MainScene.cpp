@@ -151,11 +151,11 @@ bool MainScene::init() {
     
     label_score = Label::createWithTTF(set_label(1, score), "fonts/Pixel LCD-7.ttf", 20);
     label_score->setPosition(Vec2(label_score->getContentSize().width,
-                                  visibleSize.height - label_score->getContentSize().height));
+                                  visibleSize.height - 50));
     
     label_jumps = Label::createWithTTF(set_label(2, jumps), "fonts/Pixel LCD-7.ttf", 20);
     label_jumps->setPosition(Vec2(label_score->getContentSize().width,
-                                 label_score->getPosition().y - label_jumps->getContentSize().height));
+                                 label_score->getPosition().y - 25));
     
     menu_layer->addChild(label_score, 3);
     menu_layer->addChild(label_jumps, 3);
@@ -192,13 +192,12 @@ bool MainScene::init() {
     createSnail();
     health_label = Label::createWithTTF(set_label(2, _snail->getHealth()), "fonts/Pixel LCD-7.ttf", 20);
     health_label->setColor(Color3B(0, 255, 0));
-    health_label->setPosition(Vec2(label_score->getContentSize().width,
-                                   label_jumps->getPosition().y - health_label->getContentSize().height));
+    health_label->setPosition(Vec2(_center.x, label_score->getPositionY() - 10));
     menu_layer->addChild(health_label, 3);
     
     //      tree
     tree = Sprite::createWithSpriteFrameName("tree_1.png");
-    float rand_tree_size = fval*inv_rand_max*0.5 + 0.5;
+    float rand_tree_size = fval*inv_rand_max*0.6 + 0.5;
     tree->setScale(rand_tree_size);
     auto treeBody = PhysicsBody::createBox(Size(tree->getContentSize().width,
                                                 tree->getContentSize().height),
@@ -209,7 +208,7 @@ bool MainScene::init() {
     tree->setPhysicsBody(treeBody);
     tree->setName("tree");
     tree->setTag(2);
-    Vec2 tree_pos = rand_pos(_center.x-500, 1250, 250, 250);
+    Vec2 tree_pos = rand_pos(_center.x, 1100, 250, 250);
     tree->setPosition(tree_pos);
     tree_state = true;
     spritebatch->addChild(tree);

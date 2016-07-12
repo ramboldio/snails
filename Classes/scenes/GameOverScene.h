@@ -13,6 +13,7 @@ public:
     
 private:
     void goToMainScene(Ref *sender);
+    void goToStartScene(Ref *sender);
 };
 
 #endif /* GameOverScene_h */
