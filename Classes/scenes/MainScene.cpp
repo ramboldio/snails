@@ -630,7 +630,8 @@ void MainScene::goToGameOverScene(Ref *sender) {
 
 void MainScene::goToWinningScene(Ref *sender) {
     // Save HighScore
-    _highscore->add("Lukas", score);
+    //_highscore->add("Lukas", score);
+    _highscore->add("Lukas", JUMPS_COUNT-jumps);
 
     this->cleanup();
     auto scene = WinningScene::createScene();

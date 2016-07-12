@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "cocos2d.h"
+#include "../helpers/HighscorePopup.h"
 
 class WinningScene : public cocos2d::Layer
 {
@@ -14,6 +15,7 @@ public:
     
 private:
     void goToMainScene(Ref *sender);
+    void openHighscorePopup(Ref *sender);
 };
 
 
