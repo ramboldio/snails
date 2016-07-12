@@ -210,7 +210,7 @@ bool MainScene::init() {
     tree->setPhysicsBody(treeBody);
     tree->setName("tree");
     tree->setTag(2);
-    Vec2 tree_pos = rand_pos(_center.x, 1100, 120, 120);
+    Vec2 tree_pos = rand_pos(_center.x + 50, 1100, 120, 120);
     tree->setPosition(tree_pos);
     tree_state = true;
     spritebatch->addChild(tree);
@@ -221,7 +221,7 @@ bool MainScene::init() {
     float rand_stone_size = fval*inv_rand_max*0.6 + 0.4;
    
     stone->setScale(rand_stone_size);
-    Vec2 stone_rand_pos = rand_pos(_center.x - 700, _center.x - 150, stone->getContentSize().height*rand_stone_size,
+    Vec2 stone_rand_pos = rand_pos(_center.x - 700, _center.x - 250, stone->getContentSize().height*rand_stone_size,
                                    stone->getContentSize().height*rand_stone_size);
     stone->setPosition(stone_rand_pos);
     
